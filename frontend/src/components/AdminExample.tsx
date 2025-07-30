@@ -1,7 +1,6 @@
 import React from "react";
 import {
   isUserAdmin,
-  getUserGroups,
   isUserInGroup,
   getAllUserGroups,
   decodeJWTToken,

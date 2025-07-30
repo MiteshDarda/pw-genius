@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  isUserAdmin,
-  getUserGroups,
-  isUserInGroup,
-  getAllUserGroups,
-} from "../utils/auth";
+import { isUserAdmin, isUserInGroup, getAllUserGroups } from "../utils/auth";
 
 interface AdminCheckProps {
   children?: React.ReactNode;

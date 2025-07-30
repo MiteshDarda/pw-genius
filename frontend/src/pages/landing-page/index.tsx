@@ -24,7 +24,6 @@ const LandingPage = () => {
           { label: "Winners", href: "#winners" },
           { label: "Contact", href: "#contact" },
         ]}
-        primaryAction={{ label: "Nominate", href: "#nominate" }}
         secondaryAction={{
           label: "Login",
           onClick: () => {

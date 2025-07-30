@@ -11,14 +11,12 @@ interface NavbarProps {
   logoSrc?: string;
   brand?: string;
   navItems: NavItem[];
-  primaryAction?: NavItem;
   secondaryAction?: NavItem;
 }
 
 const Navbar = ({
   logoSrc = "../../../public/pw-logo-long.png",
   navItems,
-  primaryAction,
   secondaryAction,
 }: NavbarProps) => {
   const [open, setOpen] = useState(false);
