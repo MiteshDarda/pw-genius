@@ -7,13 +7,9 @@ import {
   clearUserData,
   getUserData,
   isUserAdmin,
-  isUserAdminSync,
-  getUserGroups,
   getUserGroupsSync,
   isUserInGroup,
-  isUserInGroupSync,
   getAllUserGroups,
-  getAllUserGroupsSync,
   decodeJWTToken,
 } from "../utils/auth";
 import { useSnackbar } from "../hooks/useSnackbar";

@@ -1,18 +1,32 @@
-// Auth utility functions for AWS Cognito integration using AWS Amplify
+// Auth utility functions for AWS Cognito OIDC integration
 
-import { Amplify } from "aws-amplify";
-import { getCurrentUser, fetchAuthSession } from "aws-amplify/auth";
+// OIDC User data interface
+export interface OIDCUserData {
+  id_token: string;
+  access_token: string;
+  refresh_token?: string;
+  expires_at: number;
+  profile: {
+    sub: string;
+    email: string;
+    name?: string;
+    preferred_username?: string;
+    [key: string]: any;
+  };
+  scope: string;
+  state: string;
+}
 
-// User data interface
+// User data interface for our app
 export interface UserData {
   userId: string;
   email: string;
   name: string;
   access_token: string;
   id_token: string;
-  refresh_token: string;
+  refresh_token?: string;
   expires_at: number;
-  groups?: string[]; // Add groups to user data
+  groups?: string[];
 }
 
 // JWT Token payload interface
@@ -27,40 +41,96 @@ export interface JWTPayload {
   [key: string]: any;
 }
 
-// AWS Amplify Auth user interface
-export interface AmplifyUser {
-  signInUserSession: {
-    accessToken: {
-      payload: JWTPayload;
-    };
-    idToken: {
-      payload: JWTPayload;
-    };
-  };
-  username: string;
-  attributes?: {
-    email?: string;
-    name?: string;
-  };
-}
+// Get OIDC user data from localStorage
+export const getOIDCUserData = (): OIDCUserData | null => {
+  try {
+    const oidcData = localStorage.getItem("oidcUserData");
+    return oidcData ? JSON.parse(oidcData) : null;
+  } catch (error) {
+    return null;
+  }
+};
 
-// Store user data in localStorage
+// Store OIDC user data in localStorage
+export const storeOIDCUserData = (oidcData: OIDCUserData): void => {
+  try {
+    localStorage.setItem("oidcUserData", JSON.stringify(oidcData));
+  } catch (error) {
+    // Silent error handling
+  }
+};
+
+// Check if token is expired
+export const isTokenExpired = (expiresAt: number): boolean => {
+  const now = Math.floor(Date.now() / 1000);
+  return expiresAt <= now;
+};
+
+// Refresh token if needed
+export const refreshTokenIfNeeded = async (): Promise<boolean> => {
+  try {
+    const oidcData = getOIDCUserData();
+    if (!oidcData || !oidcData.refresh_token) {
+      return false;
+    }
+
+    // Check if token is expired or will expire in the next 5 minutes
+    const now = Math.floor(Date.now() / 1000);
+    const fiveMinutesFromNow = now + 300;
+
+    if (oidcData.expires_at <= fiveMinutesFromNow) {
+      // Token is expired or will expire soon, need to refresh
+      // For now, we'll just return false since we need to implement the actual refresh logic
+      // You can implement the refresh logic here using your OIDC provider
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Convert OIDC user data to our UserData format
+export const convertOIDCToUserData = (oidcData: OIDCUserData): UserData => {
+  const groups = getUserGroupsSync(oidcData.access_token);
+
+  return {
+    userId: oidcData.profile.sub,
+    email: oidcData.profile.email,
+    name:
+      oidcData.profile.name || oidcData.profile.preferred_username || "User",
+    access_token: oidcData.access_token,
+    id_token: oidcData.id_token,
+    refresh_token: oidcData.refresh_token,
+    expires_at: oidcData.expires_at * 1000, // Convert to milliseconds
+    groups,
+  };
+};
+
+// Store user data in localStorage (legacy function for compatibility)
 export const storeUserData = (userData: UserData): void => {
   try {
     localStorage.setItem("cognitoUser", JSON.stringify(userData));
     localStorage.setItem("isAuthenticated", "true");
   } catch (error) {
-    console.error("Error storing user data:", error);
+    // Silent error handling
   }
 };
 
-// Get user data from localStorage
+// Get user data from localStorage (legacy function for compatibility)
 export const getUserData = (): UserData | null => {
   try {
+    // First try to get from OIDC data
+    const oidcData = getOIDCUserData();
+    if (oidcData) {
+      return convertOIDCToUserData(oidcData);
+    }
+
+    // Fallback to legacy storage
     const userData = localStorage.getItem("cognitoUser");
     return userData ? JSON.parse(userData) : null;
   } catch (error) {
-    console.error("Error getting user data:", error);
     return null;
   }
 };
@@ -68,11 +138,17 @@ export const getUserData = (): UserData | null => {
 // Check if user is authenticated
 export const isAuthenticated = (): boolean => {
   try {
+    const oidcData = getOIDCUserData();
+    if (oidcData) {
+      // Check if token is expired
+      return !isTokenExpired(oidcData.expires_at);
+    }
+
+    // Fallback to legacy check
     const authStatus = localStorage.getItem("isAuthenticated");
     const userData = getUserData();
     return authStatus === "true" && userData !== null;
   } catch (error) {
-    console.error("Error checking authentication:", error);
     return false;
   }
 };
@@ -80,10 +156,11 @@ export const isAuthenticated = (): boolean => {
 // Clear all user data from localStorage
 export const clearUserData = (): void => {
   try {
+    localStorage.removeItem("oidcUserData");
     localStorage.removeItem("cognitoUser");
     localStorage.removeItem("isAuthenticated");
   } catch (error) {
-    console.error("Error clearing user data:", error);
+    // Silent error handling
   }
 };
 
@@ -91,13 +168,11 @@ export const clearUserData = (): void => {
 export const decodeJWTToken = (token: string): JWTPayload | null => {
   try {
     if (!token || typeof token !== "string") {
-      console.warn("Invalid token provided for decoding");
       return null;
     }
 
     const tokenParts = token.split(".");
     if (tokenParts.length !== 3) {
-      console.warn("Invalid JWT token format");
       return null;
     }
 
@@ -105,34 +180,20 @@ export const decodeJWTToken = (token: string): JWTPayload | null => {
     const payload = JSON.parse(atob(tokenParts[1]));
     return payload;
   } catch (error) {
-    console.error("Error decoding JWT token:", error);
     return null;
   }
 };
 
-// Get user groups from AWS Cognito using Amplify Auth
-export const getUserGroups = async (): Promise<string[]> => {
-  try {
-    const session = await fetchAuthSession();
-    const groups = session.tokens?.accessToken?.payload["cognito:groups"];
-    return Array.isArray(groups) ? (groups as string[]) : [];
-  } catch (error) {
-    console.error("Error getting user groups from Cognito:", error);
-    return [];
-  }
-};
-
-// Get user groups synchronously (fallback method)
+// Get user groups from JWT token
 export const getUserGroupsSync = (token?: string): string[] => {
   try {
-    // If no token provided, try to get from stored user data
+    // If no token provided, try to get from OIDC data
     if (!token) {
-      const userData = getUserData();
-      token = userData?.access_token;
+      const oidcData = getOIDCUserData();
+      token = oidcData?.access_token;
     }
 
     if (!token) {
-      console.warn("No token available to extract groups");
       return [];
     }
 
@@ -144,104 +205,80 @@ export const getUserGroupsSync = (token?: string): string[] => {
     const groups = decoded["cognito:groups"];
     return Array.isArray(groups) ? groups : [];
   } catch (error) {
-    console.error("Error getting user groups:", error);
     return [];
   }
 };
 
-// Check if user belongs to admin group (async)
-export const isUserAdmin = async (): Promise<boolean> => {
+// Check if user belongs to admin group
+export const isUserAdmin = (): boolean => {
   try {
-    const groups = await getUserGroups();
+    const groups = getUserGroupsSync();
     return groups.includes("admin");
   } catch (error) {
-    console.error("Error checking admin status:", error);
     return false;
   }
 };
 
-// Check if user belongs to admin group (sync fallback)
-export const isUserAdminSync = (token?: string): boolean => {
-  try {
-    const groups = getUserGroupsSync(token);
-    return groups.includes("admin");
-  } catch (error) {
-    console.error("Error checking admin status:", error);
-    return false;
-  }
-};
-
-// Check if user belongs to a specific group (async)
-export const isUserInGroup = async (groupName: string): Promise<boolean> => {
+// Check if user belongs to a specific group
+export const isUserInGroup = (groupName: string): boolean => {
   try {
     if (!groupName || typeof groupName !== "string") {
-      console.warn("Invalid group name provided");
       return false;
     }
 
-    const groups = await getUserGroups();
+    const groups = getUserGroupsSync();
     return groups.includes(groupName);
   } catch (error) {
-    console.error("Error checking group membership:", error);
     return false;
   }
 };
 
-// Check if user belongs to a specific group (sync fallback)
-export const isUserInGroupSync = (
-  groupName: string,
-  token?: string,
-): boolean => {
-  try {
-    if (!groupName || typeof groupName !== "string") {
-      console.warn("Invalid group name provided");
-      return false;
-    }
-
-    const groups = getUserGroupsSync(token);
-    return groups.includes(groupName);
-  } catch (error) {
-    console.error("Error checking group membership:", error);
-    return false;
-  }
+// Get all user groups
+export const getAllUserGroups = (): string[] => {
+  return getUserGroupsSync();
 };
 
-// Get all user groups as a string array (async)
-export const getAllUserGroups = async (): Promise<string[]> => {
-  return await getUserGroups();
+// Get current user information
+export const getCurrentUser = (): UserData | null => {
+  return getUserData();
 };
 
-// Get all user groups as a string array (sync fallback)
-export const getAllUserGroupsSync = (token?: string): string[] => {
-  return getUserGroupsSync(token);
+// Get user email
+export const getUserEmail = (): string | null => {
+  const userData = getUserData();
+  return userData?.email || null;
 };
 
-// Validate user session with Cognito
-export const validateUserSession = async (): Promise<boolean> => {
-  try {
-    const userData = getUserData();
-    if (!userData || !userData.access_token) {
-      return false;
-    }
-
-    // Here you would typically validate the token with Cognito
-    // For now, we'll do a basic check
-    const tokenExpiry = userData.expires_at;
-    if (tokenExpiry && new Date().getTime() > tokenExpiry) {
-      clearUserData();
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error validating user session:", error);
-    return false;
-  }
+// Get user name
+export const getUserName = (): string | null => {
+  const userData = getUserData();
+  return userData?.name || null;
 };
 
-// Extract user info from Cognito tokens
+// Get user ID
+export const getUserId = (): string | null => {
+  const userData = getUserData();
+  return userData?.userId || null;
+};
+
+// Validate user session
+export const validateUserSession = (): boolean => {
+  return isAuthenticated();
+};
+
+// Extract user info from any user object (legacy function)
 export const extractUserInfo = (user: any): UserData | null => {
   if (!user) return null;
+
+  // If it's already in our format, return it
+  if (user.userId && user.email) {
+    return user;
+  }
+
+  // If it's OIDC format, convert it
+  if (user.profile && user.access_token) {
+    return convertOIDCToUserData(user);
+  }
 
   // Extract groups from the user object if available
   let groups: string[] = [];
@@ -250,14 +287,13 @@ export const extractUserInfo = (user: any): UserData | null => {
   }
 
   return {
-    userId: user.sub || user.user_id,
-    email: user.email || user.profile?.email,
-    name: user.name || user.profile?.name,
-    access_token: user.access_token,
-    id_token: user.id_token,
-    refresh_token: user.refresh_token,
-    expires_at: user.expires_at,
-    groups, // Include groups in user data
-    // Add any other user info you need
+    userId: user.sub || user.user_id || `user_${Date.now()}`,
+    email: user.email || user.profile?.email || "user@example.com",
+    name: user.name || user.profile?.name || "User",
+    access_token: user.access_token || "",
+    id_token: user.id_token || "",
+    refresh_token: user.refresh_token || "",
+    expires_at: user.expires_at || Date.now() + 60 * 60 * 1000,
+    groups,
   };
 };
