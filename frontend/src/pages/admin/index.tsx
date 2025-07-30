@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { isUserAdmin } from "../../utils/auth";
 import LogoutButton from "../../components/LogoutButton";
 
 interface Nomination {
   id: string;
+  userId: string;
   studentName: string;
   class: string;
   exam: string;
@@ -26,6 +28,7 @@ interface NominationsResponse {
 }
 
 function AdminPage() {
+  const navigate = useNavigate();
   const isAdmin = isUserAdmin();
 
   const [nominations, setNominations] = useState<Nomination[]>([]);
@@ -255,7 +258,8 @@ function AdminPage() {
               {nominations.map((nomination) => (
                 <div
                   key={nomination.id}
-                  className="p-4 hover:bg-gray-50 transition-colors"
+                  className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() => navigate(`/admin/${nomination.userId}`)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">

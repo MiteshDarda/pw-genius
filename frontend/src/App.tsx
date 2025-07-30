@@ -5,6 +5,7 @@ import LandingPage from "./pages/landing-page";
 import About from "./pages/about";
 import RegistrationForm from "./pages/registration-form";
 import AdminPage from "./pages/admin";
+import AdminUserDetail from "./pages/admin/user-detail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { SnackbarProvider } from "./context/SnackbarContext";
 import GlobalSnackbar from "./components/GlobalSnackbar";
@@ -27,6 +28,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route
+            path="/admin/:userId"
+            element={
+              <ProtectedRoute>
+                <AdminUserDetail />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         <GlobalSnackbar />
       </div>

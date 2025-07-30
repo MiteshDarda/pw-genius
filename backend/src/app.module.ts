@@ -9,7 +9,7 @@ import { SharedModule } from './shared/shared.module';
 @Module({
   imports: [
     ConfigModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/pw_genius'),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     SharedModule,
     RegisterModule,
   ],

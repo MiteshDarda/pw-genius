@@ -143,4 +143,9 @@ export class RegisterController {
   async getUserNomination(@Param('userId') userId: string) {
     return this.registerService.getUserNomination(userId);
   }
+
+  @Get('admin/search/:userId')
+  async searchByUserId(@Param('userId') userId: string) {
+    return this.registerService.getUserNomination(userId);
+  }
 }

@@ -159,6 +159,7 @@ export class RegisterService {
     return {
       nominations: nominations.map((nomination) => ({
         id: nomination._id,
+        userId: nomination.userId,
         studentName: nomination.studentName,
         class: nomination.class,
         exam: nomination.examName,
@@ -354,5 +355,36 @@ export class RegisterService {
     } catch (error) {
       throw new Error('Failed to download file');
     }
+  }
+
+  async getUserNomination(userId: string) {
+    const nomination = await this.registerLogModel.findOne({ userId }).exec();
+
+    if (!nomination) {
+      throw new Error('User nomination not found');
+    }
+
+    return {
+      id: nomination._id,
+      userId: nomination.userId,
+      studentName: nomination.studentName,
+      class: nomination.class,
+      exam: nomination.examName,
+      status: nomination.status,
+      year: nomination.year,
+      performance: nomination.performance,
+      reason: nomination.reason,
+      dream: nomination.dream,
+      remarks: nomination.remarks,
+      fileUploaded: nomination.fileUploaded,
+      fileName: nomination.fileName,
+      fileUrl: nomination.fileUrl,
+      fileSize: nomination.fileSize,
+      fileMimeType: nomination.fileMimeType,
+      fatherName: nomination.fatherName,
+      motherName: nomination.motherName,
+      createdAt: (nomination as any).createdAt,
+      updatedAt: (nomination as any).updatedAt,
+    };
   }
 }
