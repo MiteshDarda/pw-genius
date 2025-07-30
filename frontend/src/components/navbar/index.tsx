@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 
 interface NavItem {
   label: string;
-  href: string;
+  href?: string;
   onClick?: () => void;
 }
 
@@ -37,27 +37,28 @@ const Navbar = ({
             {navItems.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={item.href ?? "#"}
                 className="text-gray-700 hover:text-black font-medium"
               >
                 {item.label}
               </a>
             ))}
-            {primaryAction && (
+            {/* {primaryAction && (
               <a
                 href={primaryAction.href}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700"
               >
                 {primaryAction.label}
               </a>
-            )}
+            )} */}
             {secondaryAction && (
-              <a
+              <button
+                type="button"
                 onClick={secondaryAction.onClick}
-                className="bg-gray-200 px-4 py-2 rounded-lg font-medium hover:bg-gray-300"
+                className="bg-gray-200 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 cursor-pointer"
               >
                 {secondaryAction.label}
-              </a>
+              </button>
             )}
           </nav>
 
@@ -81,17 +82,18 @@ const Navbar = ({
                 {item.label}
               </a>
             ))}
-            {primaryAction && (
+            {/* {primaryAction && (
               <a
                 href={primaryAction.href}
                 className="block w-full text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded-lg font-semibold hover:bg-blue-700"
               >
                 {primaryAction.label}
               </a>
-            )}
+            )} */}
             {secondaryAction && (
               <a
                 href={secondaryAction.href}
+                onClick={secondaryAction.onClick}
                 className="block w-full text-center bg-gray-200 px-4 py-2 mt-2 rounded-lg font-medium hover:bg-gray-300"
               >
                 {secondaryAction.label}

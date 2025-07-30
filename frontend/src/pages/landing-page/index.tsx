@@ -27,8 +27,10 @@ const LandingPage = () => {
         primaryAction={{ label: "Nominate", href: "#nominate" }}
         secondaryAction={{
           label: "Login",
-          href: "login",
-          onClick: () => auth.signinRedirect(),
+          onClick: () => {
+            console.log("clicked");
+            auth.signinRedirect();
+          },
         }}
       />
       {/*//? Hero Section ======================================================================================== */}
@@ -51,24 +53,6 @@ const LandingPage = () => {
 
       {/* FAQ Section */}
       <FAQ />
-
-      {/* Newsletter & Featured Video */}
-      {/* <section className="max-w-7xl mx-auto mt-16 px-4 mb-16">
-        <div className="bg-[#F5EBFB] rounded-xl p-6 flex flex-col md:flex-row gap-8 items-center justify-between">
-          <div className="flex-1 w-full max-w-xs">
-            <div className="font-semibold mb-2">Stay Updated !!</div>
-            <NewsletterSignup />
-          </div>
-          <div className="flex-1 w-full max-w-md">
-            <FeaturedVideo
-              videoTitle="National Student Competition Highlights"
-              videoDescription="Watch the highlights from the recent National Student Competition, showcasing the talent and achievements of students across the nation."
-              videoUrl="#"
-              thumbnail="/img1.png"
-            />
-          </div>
-        </div>
-      </section> */}
 
       {/* Footer */}
       <Footer />
