@@ -1,16 +1,10 @@
 // Login.js
 
 import { useAuth } from "react-oidc-context";
+import { signOutRedirect } from "../../utils/logout";
 
 function Login() {
   const auth = useAuth();
-
-  const signOutRedirect = () => {
-    const clientId = "22ui8epm25gr3r2loks4tdq6n6";
-    const logoutUri = "<logout uri>";
-    const cognitoDomain = "https://<user pool domain>";
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
 
   if (auth.isLoading) {
     return <div>Loading...</div>;

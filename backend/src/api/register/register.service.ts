@@ -126,6 +126,58 @@ export class RegisterService {
     };
   }
 
+  async getNominations(
+    search?: string,
+    classFilter?: string,
+    examFilter?: string,
+    statusFilter?: string,
+  ) {
+    const filter: any = {};
+
+    // Search filter
+    if (search) {
+      filter.studentName = { $regex: search, $options: 'i' };
+    }
+
+    // Class filter
+    if (classFilter) {
+      filter.class = classFilter;
+    }
+
+    // Exam filter
+    if (examFilter) {
+      filter.examName = { $regex: examFilter, $options: 'i' };
+    }
+
+    // Status filter
+    if (statusFilter) {
+      filter.status = statusFilter;
+    }
+
+    const nominations = await this.registerLogModel.find(filter).exec();
+
+    return {
+      nominations: nominations.map((nomination) => ({
+        id: nomination._id,
+        studentName: nomination.studentName,
+        class: nomination.class,
+        exam: nomination.examName,
+        status: nomination.status,
+        year: nomination.year,
+        performance: nomination.performance,
+        reason: nomination.reason,
+        dream: nomination.dream,
+        remarks: nomination.remarks,
+        fileUploaded: nomination.fileUploaded,
+        fileName: nomination.fileName,
+        fileUrl: nomination.fileUrl,
+        createdAt: (nomination as any).createdAt,
+        updatedAt: (nomination as any).updatedAt,
+      })),
+      total: nominations.length,
+    };
+  }
+
   findOne(id: string) {
     return this.registerLogModel.findById(id).exec();
   }
@@ -136,5 +188,171 @@ export class RegisterService {
 
   remove(id: string) {
     return this.registerLogModel.findByIdAndDelete(id).exec();
+  }
+
+  async getNominationDetails(id: string) {
+    const nomination = await this.registerLogModel.findById(id).exec();
+
+    if (!nomination) {
+      throw new Error('Nomination not found');
+    }
+
+    return {
+      id: nomination._id,
+      studentName: nomination.studentName,
+      class: nomination.class,
+      exam: nomination.examName,
+      status: nomination.status,
+      year: nomination.year,
+      performance: nomination.performance,
+      reason: nomination.reason,
+      dream: nomination.dream,
+      remarks: nomination.remarks,
+      fileUploaded: nomination.fileUploaded,
+      fileName: nomination.fileName,
+      fileUrl: nomination.fileUrl,
+      fileSize: nomination.fileSize,
+      fileMimeType: nomination.fileMimeType,
+      fatherName: nomination.fatherName,
+      motherName: nomination.motherName,
+      createdAt: (nomination as any).createdAt,
+      updatedAt: (nomination as any).updatedAt,
+    };
+  }
+
+  async updateNominationStatus(id: string, status: string, remarks?: string) {
+    const nomination = await this.registerLogModel.findById(id).exec();
+
+    if (!nomination) {
+      throw new Error('Nomination not found');
+    }
+
+    const updateData: any = { status };
+    if (remarks !== undefined) {
+      updateData.remarks = remarks;
+    }
+
+    const updatedNomination = await this.registerLogModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
+
+    return {
+      message: 'Nomination status updated successfully',
+      nomination: {
+        id: updatedNomination._id,
+        studentName: updatedNomination.studentName,
+        status: updatedNomination.status,
+        remarks: updatedNomination.remarks,
+        updatedAt: (updatedNomination as any).updatedAt,
+      },
+    };
+  }
+
+  async bulkUpdateStatus(ids: string[], status: string, remarks?: string) {
+    const updateData: any = { status };
+    if (remarks !== undefined) {
+      updateData.remarks = remarks;
+    }
+
+    const result = await this.registerLogModel
+      .updateMany({ _id: { $in: ids } }, updateData, { new: true })
+      .exec();
+
+    return {
+      message: `Successfully updated ${result.modifiedCount} nominations`,
+      updatedCount: result.modifiedCount,
+      totalRequested: ids.length,
+    };
+  }
+
+  async getAdminStatistics() {
+    const totalNominations = await this.registerLogModel
+      .countDocuments()
+      .exec();
+    const pendingCount = await this.registerLogModel
+      .countDocuments({ status: 'pending' })
+      .exec();
+    const approvedCount = await this.registerLogModel
+      .countDocuments({ status: 'approved' })
+      .exec();
+    const rejectedCount = await this.registerLogModel
+      .countDocuments({ status: 'rejected' })
+      .exec();
+
+    // Get class distribution
+    const classStats = await this.registerLogModel
+      .aggregate([
+        {
+          $group: {
+            _id: '$class',
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ])
+      .exec();
+
+    // Get exam distribution
+    const examStats = await this.registerLogModel
+      .aggregate([
+        {
+          $group: {
+            _id: '$examName',
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { count: -1 } },
+      ])
+      .exec();
+
+    // Get recent nominations (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const recentNominations = await this.registerLogModel
+      .countDocuments({
+        createdAt: { $gte: sevenDaysAgo },
+      })
+      .exec();
+
+    return {
+      totalNominations,
+      statusBreakdown: {
+        pending: pendingCount,
+        approved: approvedCount,
+        rejected: rejectedCount,
+      },
+      classDistribution: classStats,
+      examDistribution: examStats,
+      recentNominations,
+      lastUpdated: new Date().toISOString(),
+    };
+  }
+
+  async downloadNominationFile(id: string) {
+    const nomination = await this.registerLogModel.findById(id).exec();
+
+    if (!nomination) {
+      throw new Error('Nomination not found');
+    }
+
+    if (!nomination.fileUploaded || !nomination.fileUrl) {
+      throw new Error('No file available for this nomination');
+    }
+
+    try {
+      // Get the file from S3
+      const fileBuffer = await this.s3Service.downloadFile(nomination.fileUrl);
+
+      return {
+        fileName: nomination.fileName,
+        fileSize: nomination.fileSize,
+        fileMimeType: nomination.fileMimeType,
+        fileBuffer: fileBuffer,
+        studentName: nomination.studentName,
+      };
+    } catch (error) {
+      throw new Error('Failed to download file');
+    }
   }
 }

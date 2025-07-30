@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 
 @Injectable()
 export class S3Service {
@@ -70,6 +74,48 @@ export class S3Service {
       }
 
       throw new Error(`Failed to upload file to S3: ${error.message}`);
+    }
+  }
+
+  async downloadFile(fileUrl: string): Promise<Buffer> {
+    try {
+      // Extract bucket and key from the S3 URL
+      const url = new URL(fileUrl);
+      const bucketName = url.hostname.split('.')[0];
+      const key = url.pathname.substring(1); // Remove leading slash
+
+      const downloadParams = {
+        Bucket: bucketName,
+        Key: key,
+      };
+
+      console.log('Attempting to download from S3...');
+      console.log('Bucket:', bucketName);
+      console.log('Key:', key);
+
+      const response = await this.s3Client.send(
+        new GetObjectCommand(downloadParams),
+      );
+
+      if (!response.Body) {
+        throw new Error('No file content received from S3');
+      }
+
+      // Convert the readable stream to buffer
+      const chunks: Uint8Array[] = [];
+      for await (const chunk of response.Body as any) {
+        chunks.push(chunk);
+      }
+
+      const buffer = Buffer.concat(chunks);
+
+      console.log('File downloaded from S3 successfully!');
+      console.log('File size:', buffer.length, 'bytes');
+
+      return buffer;
+    } catch (error) {
+      console.error('Error downloading file from S3:', error);
+      throw new Error(`Failed to download file from S3: ${error.message}`);
     }
   }
 }

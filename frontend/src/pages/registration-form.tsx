@@ -4,14 +4,13 @@ import axios from "axios";
 import Footer from "../components/footer";
 import ProtectedRoute from "../components/ProtectedRoute";
 import {
-  clearUserData,
   getUserData,
   isUserAdmin,
-  getUserGroupsSync,
   isUserInGroup,
   getAllUserGroups,
   decodeJWTToken,
 } from "../utils/auth";
+import { handleLogout } from "../utils/logout";
 import { useSnackbar } from "../hooks/useSnackbar";
 
 // Minimal Navbar component with only logout functionality
@@ -353,22 +352,6 @@ const RegistrationForm = () => {
 
     checkAllGroups();
   }, [userData?.userId]);
-
-  /**
-   * Handle logout functionality
-   * Clears user data and redirects to home page
-   */
-  const handleLogout = () => {
-    const signOutRedirect = () => {
-      const clientId = import.meta.env.VITE_CLIENT_ID;
-      const logoutUri = import.meta.env.VITE_LOGOUT_URI;
-      const cognitoDomain = import.meta.env.VITE_COGNITO_DOMAIN;
-      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-    };
-
-    clearUserData();
-    signOutRedirect();
-  };
 
   return (
     <ProtectedRoute>

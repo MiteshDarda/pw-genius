@@ -1,132 +1,86 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  isUserAdmin,
-  getUserEmail,
-  getUserName,
-  clearUserData,
-} from "../../utils/auth";
+import React, { useState, useEffect } from "react";
+import { isUserAdmin } from "../../utils/auth";
+import LogoutButton from "../../components/LogoutButton";
 
-// Mock data for nominations
-const mockNominations = [
-  {
-    id: 1,
-    studentName: "Aarav Sharma",
-    class: "Class 10",
-    exam: "National Science Olympiad",
-    status: "Pending",
-    statusColor: "orange",
-    statusIcon: "●",
-  },
-  {
-    id: 2,
-    studentName: "Priya Verma",
-    class: "Class 12",
-    exam: "National Mathematics Olympiad",
-    status: "Approved",
-    statusColor: "green",
-    statusIcon: "✓",
-  },
-  {
-    id: 3,
-    studentName: "Rohan Kapoor",
-    class: "Class 11",
-    exam: "National English Olympiad",
-    status: "Rejected",
-    statusColor: "red",
-    statusIcon: "✕",
-  },
-  {
-    id: 4,
-    studentName: "Anika Patel",
-    class: "Class 9",
-    exam: "National Social Studies Olympiad",
-    status: "Pending",
-    statusColor: "orange",
-    statusIcon: "●",
-  },
-  {
-    id: 5,
-    studentName: "Vikram Singh",
-    class: "Class 10",
-    exam: "National Science Olympiad",
-    status: "Approved",
-    statusColor: "green",
-    statusIcon: "✓",
-  },
-  {
-    id: 6,
-    studentName: "Divya Joshi",
-    class: "Class 12",
-    exam: "National Mathematics Olympiad",
-    status: "Rejected",
-    statusColor: "red",
-    statusIcon: "✕",
-  },
-  {
-    id: 7,
-    studentName: "Arjun Mehta",
-    class: "Class 11",
-    exam: "National English Olympiad",
-    status: "Pending",
-    statusColor: "orange",
-    statusIcon: "●",
-  },
-  {
-    id: 8,
-    studentName: "Ishita Reddy",
-    class: "Class 9",
-    exam: "National Social Studies Olympiad",
-    status: "Approved",
-    statusColor: "green",
-    statusIcon: "✓",
-  },
-];
+interface Nomination {
+  id: string;
+  studentName: string;
+  class: string;
+  exam: string;
+  status: string;
+  year: string;
+  performance: string;
+  reason: string;
+  dream: string;
+  remarks?: string;
+  fileUploaded: boolean;
+  fileName?: string;
+  fileUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface NominationsResponse {
+  nominations: Nomination[];
+  total: number;
+}
 
 function AdminPage() {
-  const navigate = useNavigate();
   const isAdmin = isUserAdmin();
-  const userEmail = getUserEmail();
-  const userName = getUserName();
 
+  const [nominations, setNominations] = useState<Nomination[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredNominations, setFilteredNominations] =
-    useState(mockNominations);
+  const [classFilter, setClassFilter] = useState("");
+  const [examFilter, setExamFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
-  const signOutRedirect = () => {
-    const clientId = "22ui8epm25gr3r2loks4tdq6n6";
-    const logoutUri = "http://localhost:5173/";
-    const cognitoDomain =
-      "https://ap-south-1a9crqpyeh.auth.ap-south-1.amazoncognito.com";
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  const fetchNominations = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const params = new URLSearchParams();
+      if (searchTerm) params.append("search", searchTerm);
+      if (classFilter) params.append("class", classFilter);
+      if (examFilter) params.append("exam", examFilter);
+      if (statusFilter) params.append("status", statusFilter);
+
+      const backendUrl =
+        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+      const response = await fetch(
+        `${backendUrl}/api/register/admin/nominations?${params}`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch nominations");
+      }
+
+      const data: NominationsResponse = await response.json();
+      setNominations(data.nominations);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLogout = () => {
-    clearUserData();
-    signOutRedirect();
-  };
+  useEffect(() => {
+    fetchNominations();
+  }, [searchTerm, classFilter, examFilter, statusFilter]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-
-    if (term.trim() === "") {
-      setFilteredNominations(mockNominations);
-    } else {
-      const filtered = mockNominations.filter((nomination) =>
-        nomination.studentName.toLowerCase().includes(term.toLowerCase()),
-      );
-      setFilteredNominations(filtered);
-    }
+    setSearchTerm(e.target.value);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Approved":
+      case "approved":
         return "bg-green-100 text-green-800 border-green-200";
-      case "Rejected":
+      case "rejected":
         return "bg-red-100 text-red-800 border-red-200";
-      case "Pending":
+      case "pending":
         return "bg-orange-100 text-orange-800 border-orange-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
@@ -135,14 +89,27 @@ function AdminPage() {
 
   const getStatusIconColor = (status: string) => {
     switch (status) {
-      case "Approved":
+      case "approved":
         return "text-green-600";
-      case "Rejected":
+      case "rejected":
         return "text-red-600";
-      case "Pending":
+      case "pending":
         return "text-orange-600";
       default:
         return "text-gray-600";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "approved":
+        return "✓";
+      case "rejected":
+        return "✕";
+      case "pending":
+        return "●";
+      default:
+        return "●";
     }
   };
 
@@ -170,12 +137,7 @@ function AdminPage() {
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-900">Nominations</h1>
             </div>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors text-sm"
-            >
-              Logout
-            </button>
+            <LogoutButton />
           </div>
         </div>
       </header>
@@ -211,80 +173,121 @@ function AdminPage() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-6">
-          <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors flex items-center">
-            Class
-            <svg
-              className="ml-2 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-          <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors flex items-center">
-            Nomination Category
-            <svg
-              className="ml-2 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-          <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors">
-            Status
-          </button>
+          <select
+            value={classFilter}
+            onChange={(e) => setClassFilter(e.target.value)}
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+          >
+            <option value="">Class</option>
+            <option value="Class 9">Class 9</option>
+            <option value="Class 10">Class 10</option>
+            <option value="Class 11">Class 11</option>
+            <option value="Class 12">Class 12</option>
+          </select>
+
+          <select
+            value={examFilter}
+            onChange={(e) => setExamFilter(e.target.value)}
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+          >
+            <option value="">Nomination Category</option>
+            <option value="National Science Olympiad">
+              National Science Olympiad
+            </option>
+            <option value="National Mathematics Olympiad">
+              National Mathematics Olympiad
+            </option>
+            <option value="National English Olympiad">
+              National English Olympiad
+            </option>
+            <option value="National Social Studies Olympiad">
+              National Social Studies Olympiad
+            </option>
+          </select>
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+          >
+            <option value="">Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
         </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="mt-2 text-sm text-gray-600">Loading nominations...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <svg
+              className="mx-auto h-12 w-12 text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              Error loading nominations
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">{error}</p>
+          </div>
+        )}
 
         {/* Nominations List */}
-        <div className="bg-white rounded-lg shadow-sm">
-          <div className="divide-y divide-gray-200">
-            {filteredNominations.map((nomination) => (
-              <div
-                key={nomination.id}
-                className="p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                      {nomination.studentName}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {nomination.class} | Exam: {nomination.exam}
-                    </p>
-                  </div>
-                  <div className="ml-4">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(nomination.status)}`}
-                    >
+        {!loading && !error && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="divide-y divide-gray-200">
+              {nominations.map((nomination) => (
+                <div
+                  key={nomination.id}
+                  className="p-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                        {nomination.studentName}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {nomination.class} | Exam: {nomination.exam}
+                      </p>
+                    </div>
+                    <div className="ml-4">
                       <span
-                        className={`mr-1 ${getStatusIconColor(nomination.status)}`}
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(nomination.status)}`}
                       >
-                        {nomination.statusIcon}
+                        <span
+                          className={`mr-1 ${getStatusIconColor(nomination.status)}`}
+                        >
+                          {getStatusIcon(nomination.status)}
+                        </span>
+                        {nomination.status.charAt(0).toUpperCase() +
+                          nomination.status.slice(1)}
                       </span>
-                      {nomination.status}
-                    </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Empty state */}
-        {filteredNominations.length === 0 && (
+        {!loading && !error && nominations.length === 0 && (
           <div className="text-center py-12">
             <svg
               className="mx-auto h-12 w-12 text-gray-400"
@@ -303,8 +306,8 @@ function AdminPage() {
               No nominations found
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm
-                ? `No nominations match "${searchTerm}"`
+              {searchTerm || classFilter || examFilter || statusFilter
+                ? "No nominations match the current filters"
                 : "No nominations available"}
             </p>
           </div>
