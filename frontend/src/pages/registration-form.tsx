@@ -123,7 +123,13 @@ const RegistrationForm = () => {
       if (isUserAdminStatus) {
         console.log("✅ Admin has logged in");
         setIsAdmin(true);
-        showSnackbar("Welcome Admin!", "success");
+        showSnackbar(
+          "Welcome Admin! Redirecting to admin dashboard...",
+          "success",
+        );
+
+        // Redirect admin users to admin page after a short delay
+        navigate("/admin");
       } else {
         console.log("👤 Regular user logged in");
         setIsAdmin(false);
@@ -353,8 +359,15 @@ const RegistrationForm = () => {
    * Clears user data and redirects to home page
    */
   const handleLogout = () => {
+    const signOutRedirect = () => {
+      const clientId = import.meta.env.VITE_CLIENT_ID;
+      const logoutUri = import.meta.env.VITE_LOGOUT_URI;
+      const cognitoDomain = import.meta.env.VITE_COGNITO_DOMAIN;
+      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    };
+
     clearUserData();
-    navigate("/");
+    signOutRedirect();
   };
 
   return (

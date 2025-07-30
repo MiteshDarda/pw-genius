@@ -6,10 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "react-oidc-context";
 
 const cognitoAuthConfig = {
-  authority:
-    "https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_A9CrqpyEH",
-  client_id: "22ui8epm25gr3r2loks4tdq6n6",
-  redirect_uri: "http://localhost:5173/success",
+  authority: import.meta.env.VITE_COGNITO_AUTHORITY,
+  client_id: import.meta.env.VITE_CLIENT_ID,
+  redirect_uri: import.meta.env.VITE_SUCCESS_REDIRECT_URI,
   response_type: "code",
   scope: "phone openid email",
 };

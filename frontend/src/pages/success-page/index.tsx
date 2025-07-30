@@ -37,14 +37,27 @@ function SuccessPage() {
         const userData = convertOIDCToUserData(parsedOidcData);
         storeUserData(userData);
 
-        // Check if user is admin and log it once
+        // Check if user is admin and redirect accordingly
         const adminStatus = isUserAdmin();
         console.log(
           "User authentication successful. Admin status:",
           adminStatus,
         );
+
+        // Redirect based on admin status
+        setTimeout(() => {
+          if (adminStatus) {
+            navigate("/admin");
+          } else {
+            navigate("/register");
+          }
+        }, 2000);
       } catch (error) {
         console.error("Error processing OIDC user data:", error);
+        // Fallback redirect
+        setTimeout(() => {
+          navigate("/register");
+        }, 2000);
       }
     } else {
       // Check if we have an authenticated user from react-oidc-context
@@ -66,12 +79,21 @@ function SuccessPage() {
         // Store user data in localStorage
         storeUserData(userInfo);
 
-        // Check if user is admin and log it once
+        // Check if user is admin and redirect accordingly
         const adminStatus = isUserAdmin();
         console.log(
           "User authentication successful. Admin status:",
           adminStatus,
         );
+
+        // Redirect based on admin status
+        setTimeout(() => {
+          if (adminStatus) {
+            navigate("/admin");
+          } else {
+            navigate("/register");
+          }
+        }, 2000);
       } else {
         // Fallback: create basic user info from URL parameters
         if (code && state) {
@@ -87,14 +109,14 @@ function SuccessPage() {
 
           storeUserData(userInfo);
           console.log("Fallback user data stored");
+
+          // Redirect to registration for fallback users
+          setTimeout(() => {
+            navigate("/register");
+          }, 2000);
         }
       }
     }
-
-    // Redirect to register page after a short delay
-    setTimeout(() => {
-      navigate("/register");
-    }, 2000);
   }, [location.search, navigate, auth]);
 
   return (
@@ -104,9 +126,7 @@ function SuccessPage() {
         <h2 className="mt-4 text-xl font-semibold text-gray-800">
           Authentication Successful!
         </h2>
-        <p className="mt-2 text-gray-600">
-          Redirecting to registration form...
-        </p>
+        <p className="mt-2 text-gray-600">Redirecting...</p>
       </div>
     </div>
   );
