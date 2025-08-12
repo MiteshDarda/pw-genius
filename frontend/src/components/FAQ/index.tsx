@@ -1,29 +1,30 @@
 import FAQAccordion, { type FAQItem } from "../faq-accordion";
 
-// Placeholder data for FAQs
+// FAQ data
 const faqs: FAQItem[] = [
   {
-    question: "What is the Scholastic Challenge?",
+    question: "When can I nominate?",
+    answer: "Nomination window runs August 20- Sept 30, 2025.",
+  },
+  {
+    question: "Can I edit my profile after submission?",
     answer:
-      "The Scholastic Challenge is a national-level competition designed to recognize and celebrate the academic and extracurricular achievements of students across India. It aims to foster a spirit of healthy competition and encourage students to excel in various fields.",
+      "No—please verify everything before locking; no changes are allowed once locked.",
   },
   {
-    question: "Who can participate in the Scholastic Challenge?",
-    answer: "Open to students from classes 5th to 12th across India.",
-  },
-  {
-    question: "How do I register for the Scholastic Challenge?",
+    question: "How will I know if I'm shortlisted?",
     answer:
-      "Register online by creating an account and filling out the nomination form.",
+      "Shortlist announcements go live on the site by Oct 5, 2025, and via email/SMS.",
   },
   {
-    question: "What are the different stages of the Scholastic Challenge?",
-    answer: "Nomination, verification, and final selection.",
-  },
-  {
-    question: "What are the prizes for the Scholastic Challenge?",
+    question: "Is travel support provided?",
     answer:
-      "Winners receive national recognition, certificates, and other exciting rewards.",
+      "We offer travel subsidies to top 20 qualifiers (customized per location).",
+  },
+  {
+    question: "Will only Nomination make me PW Genius?",
+    answer:
+      "No, After Nomination if you are selected you need to travel (arranged by PW) to Noida for final day competition, achievement and celebration.",
   },
 ];
 

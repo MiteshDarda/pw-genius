@@ -4,7 +4,7 @@ import React from "react";
 interface InfoCardProps {
   icon: React.ReactNode;
   title: string;
-  description: string;
+  description?: string;
 }
 
 /**
@@ -16,7 +16,7 @@ const InfoCard: React.FC<InfoCardProps> = ({ icon, title, description }) => {
     <div className="bg-white rounded-[8px] border-[#DBDEE5] border-1 p-6 flex flex-col h-full">
       <div className="mb-4 text-3xl">{icon}</div>
       <h3 className="font-bold mb-2">{title}</h3>
-      <p className="text-[#636B87] text-sm">{description}</p>
+      {description && <p className="text-[#636B87] text-sm">{description}</p>}
     </div>
   );
 };

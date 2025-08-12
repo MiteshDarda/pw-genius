@@ -8,16 +8,18 @@ import PastWinnersSection from "../../components/past-winners-section";
 import EligibilityAndCategories from "../../components/eligibility-and-categories";
 import HowToNominate from "../../components/how-to-nominate";
 import FAQ from "../../components/FAQ";
+import CountdownTimer from "../../components/countdown-timer";
 import { useAuth } from "react-oidc-context";
 
 const LandingPage = () => {
   const auth = useAuth();
+  const timeLeft = import.meta.env.VITE_NOMINATION_CLOSING_TIME; // Epoch timestamp in seconds
 
   return (
     <div className=" min-h-screen relative">
       {/*//? Navbar ======================================================================================== */}
       <Navbar
-        logoSrc="../../../public/pw-logo-long.png"
+        logoSrc="/pw-logo-long.png"
         navItems={[
           { label: "About", href: "#about" },
           { label: "Eligibility", href: "#eligibility" },
@@ -38,17 +40,20 @@ const LandingPage = () => {
       {/*//? Why Participate? ======================================================================================== */}
       <WhyParticipate />
 
+      {/*//? Nomination Closes In ======================================================================================== */}
+      <CountdownTimer closingTime={timeLeft} />
+
       {/*//? Past Winners Section ======================================================================================== */}
-      <PastWinnersSection />
+      {/* <PastWinnersSection /> */}
 
       {/*//? Eligibility and Categories ======================================================================================== */}
-      <EligibilityAndCategories />
+      {/* <EligibilityAndCategories /> */}
 
       {/*//? Meet Our Champions Section ======================================================================================== */}
       {/* <MeetOurChampions /> */}
 
       {/* How to Nominate */}
-      <HowToNominate />
+      {/* <HowToNominate /> */}
 
       {/* FAQ Section */}
       <FAQ />
