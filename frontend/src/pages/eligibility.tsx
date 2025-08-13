@@ -46,52 +46,77 @@ const classes = [
 const Eligibility = () => {
   const [selectedClass, setSelectedClass] = useState("class5");
   const [achievementData, setAchievementData] = useState<AchievementData[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [allClassData, setAllClassData] = useState<{
+    [key: string]: AchievementData[];
+  }>({});
+  const [initialLoading, setInitialLoading] = useState(true);
 
+  // Preload all class data on component mount
   useEffect(() => {
-    console.log("Selected class changed to:", selectedClass);
-    loadClassData(selectedClass);
-  }, [selectedClass]);
+    preloadAllClassData();
+  }, []);
 
+  // Update displayed data when selected class changes (no loading needed)
   useEffect(() => {
-    console.log("Achievement data updated:", achievementData);
-  }, [achievementData]);
+    if (allClassData[selectedClass]) {
+      setAchievementData(allClassData[selectedClass]);
+    }
+  }, [selectedClass, allClassData]);
 
-  const loadClassData = async (classId: string) => {
-    setLoading(true);
+  const preloadAllClassData = async () => {
+    setInitialLoading(true);
+    const allData: { [key: string]: AchievementData[] } = {};
+
     try {
-      const response = await fetch(`/${classId}.csv`);
-      const csvText = await response.text();
+      // Load all classes in parallel
+      const promises = classes.map(async (classItem) => {
+        try {
+          const response = await fetch(`/${classItem.id}.csv`);
+          const csvText = await response.text();
 
-      // Parse CSV data
-      const lines = csvText.split("\n");
-      const data: AchievementData[] = [];
+          // Parse CSV data
+          const lines = csvText.split("\n");
+          const data: AchievementData[] = [];
 
-      for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim()) {
-          const values = lines[i].split(",");
-          if (values.length >= 2) {
-            const title = values[0].replace(/"/g, "").trim();
-            const criteria = values[1].replace(/"/g, "").trim();
+          for (let i = 1; i < lines.length; i++) {
+            if (lines[i].trim()) {
+              const values = lines[i].split(",");
+              if (values.length >= 2) {
+                const title = values[0].replace(/"/g, "").trim();
+                const criteria = values[1].replace(/"/g, "").trim();
 
-            // Skip empty rows
-            if (title || criteria) {
-              data.push({
-                "Competition Title": title,
-                Criteria: criteria,
-              });
+                // Skip empty rows
+                if (title || criteria) {
+                  data.push({
+                    "Competition Title": title,
+                    Criteria: criteria,
+                  });
+                }
+              }
             }
           }
-        }
-      }
 
-      console.log(`Loaded data for ${classId}:`, data);
-      setAchievementData(data);
+          allData[classItem.id] = data;
+          console.log(`Preloaded data for ${classItem.id}:`, data);
+        } catch (error) {
+          console.error(`Error loading data for ${classItem.id}:`, error);
+          allData[classItem.id] = [];
+        }
+      });
+
+      // Wait for all classes to load
+      await Promise.all(promises);
+
+      setAllClassData(allData);
+
+      // Set initial data for the default selected class
+      if (allData["class5"]) {
+        setAchievementData(allData["class5"]);
+      }
     } catch (error) {
-      console.error("Error loading CSV data:", error);
-      setAchievementData([]);
+      console.error("Error preloading class data:", error);
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
     }
   };
 
@@ -122,11 +147,29 @@ const Eligibility = () => {
       }
     });
 
-    console.log("Grouped achievements:", grouped);
     return grouped;
   };
 
   const groupedAchievements = groupAchievementsByCategory(achievementData);
+
+  // Show loading only during initial preload
+  if (initialLoading) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <main className="max-w-7xl mx-auto pt-28 pb-12 px-4">
+          <div className="text-center py-12">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600 mb-2">
+              Loading eligibility criteria...
+            </p>
+            <p className="text-sm text-gray-500">
+              Preloading all class data for instant switching
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -209,14 +252,7 @@ const Eligibility = () => {
               </h2>
 
               {/* Table */}
-              {loading ? (
-                <div className="text-center py-12">
-                  <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-gray-600">
-                    Loading eligibility criteria...
-                  </p>
-                </div>
-              ) : achievementData.length === 0 ? (
+              {achievementData.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-600">
                     No eligibility criteria found for this class.
