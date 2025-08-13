@@ -10,24 +10,9 @@ import {
   getAllUserGroups,
   decodeJWTToken,
 } from "../utils/auth";
-import { handleLogout } from "../utils/logout";
 import { useSnackbar } from "../hooks/useSnackbar";
 
-// Minimal Navbar component with only logout functionality
-// Used in the registration form to provide a clean, focused interface
-const MinimalNavbar: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => (
-  <header className="w-full shadow-md bg-white fixed top-0 z-50">
-    <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-      <img src="/pw-logo-long.png" alt="Logo" className="h-12" />
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700"
-        onClick={onLogout}
-      >
-        Logout
-      </button>
-    </div>
-  </header>
-);
+
 
 // Available class options for the registration form
 const classes = ["6", "7", "8", "9", "10", "11", "12"];
@@ -356,8 +341,6 @@ const RegistrationForm = () => {
   return (
     <ProtectedRoute>
       <div className="bg-gray-50 min-h-screen">
-        <MinimalNavbar onLogout={handleLogout} />
-
         <main className="max-w-5xl mx-auto pt-28 pb-12 px-4">
           {/* Page Header with Status */}
           <div className="mb-8">

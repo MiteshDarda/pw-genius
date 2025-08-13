@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface NavItem {
   label: string;
@@ -21,43 +22,55 @@ const Navbar = ({
 }: NavbarProps) => {
   const [open, setOpen] = useState(false);
 
+  const renderSecondaryAction = (
+    action: NavItem,
+    isMobile: boolean = false,
+  ) => {
+    const baseClasses = isMobile
+      ? "block w-full text-center bg-gray-200 px-4 py-2 mt-2 rounded-lg font-medium hover:bg-gray-300"
+      : "bg-gray-200 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 cursor-pointer";
+
+    if (action.onClick) {
+      return (
+        <button type="button" onClick={action.onClick} className={baseClasses}>
+          {action.label}
+        </button>
+      );
+    }
+
+    if (action.href) {
+      return (
+        <a href={action.href} className={baseClasses}>
+          {action.label}
+        </a>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       <header className="w-full shadow-md bg-white fixed top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
           <div className="flex items-center gap-2">
-            {/* <img src={logoSrc} alt="Logo" className="w-8 h-8" /> */}
-            <img src={logoSrc} alt="Logo" className="h-12" />
+            <Link to="/" className="hover:opacity-80 transition-opacity">
+              <img src={logoSrc} alt="Logo" className="h-12" />
+            </Link>
           </div>
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
               <a
-                key={item.href}
+                key={item.href || item.label}
                 href={item.href ?? "#"}
                 className="text-gray-700 hover:text-black font-medium"
               >
                 {item.label}
               </a>
             ))}
-            {/* {primaryAction && (
-              <a
-                href={primaryAction.href}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700"
-              >
-                {primaryAction.label}
-              </a>
-            )} */}
-            {secondaryAction && (
-              <button
-                type="button"
-                onClick={secondaryAction.onClick}
-                className="bg-gray-200 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 cursor-pointer"
-              >
-                {secondaryAction.label}
-              </button>
-            )}
+            {secondaryAction && renderSecondaryAction(secondaryAction)}
           </nav>
 
           {/* Mobile Menu Icon */}
@@ -73,30 +86,14 @@ const Navbar = ({
           <div className="md:hidden bg-white px-4 pb-4">
             {navItems.map((item) => (
               <a
-                key={item.href}
+                key={item.href || item.label}
                 href={item.href}
                 className="block py-2 text-gray-700 font-medium"
               >
                 {item.label}
               </a>
             ))}
-            {/* {primaryAction && (
-              <a
-                href={primaryAction.href}
-                className="block w-full text-center bg-blue-600 text-white px-4 py-2 mt-2 rounded-lg font-semibold hover:bg-blue-700"
-              >
-                {primaryAction.label}
-              </a>
-            )} */}
-            {secondaryAction && (
-              <a
-                href={secondaryAction.href}
-                onClick={secondaryAction.onClick}
-                className="block w-full text-center bg-gray-200 px-4 py-2 mt-2 rounded-lg font-medium hover:bg-gray-300"
-              >
-                {secondaryAction.label}
-              </a>
-            )}
+            {secondaryAction && renderSecondaryAction(secondaryAction, true)}
           </div>
         )}
       </header>

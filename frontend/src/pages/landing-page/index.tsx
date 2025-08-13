@@ -1,36 +1,26 @@
 import Hero from "../../components/hero";
-import Navbar from "../../components/navbar";
-// import NewsletterSignup from "../../components/newsletter-signup";
-// import FeaturedVideo from "../../components/featured-video";
 import Footer from "../../components/footer";
 import WhyParticipate from "../../components/why-participate";
 import FAQ from "../../components/FAQ";
 import CountdownTimer from "../../components/countdown-timer";
-import { useAuth } from "react-oidc-context";
+import { useEffect } from "react";
 
 const LandingPage = () => {
-  const auth = useAuth();
   const timeLeft = import.meta.env.VITE_NOMINATION_CLOSING_TIME; // Epoch timestamp in seconds
+
+  // on mount if we have # in url, scroll to that section
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const section = document.querySelector(hash);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, []);
 
   return (
     <div className=" min-h-screen relative">
-      {/*//? Navbar ======================================================================================== */}
-      <Navbar
-        logoSrc="/pw-logo-long.png"
-        navItems={[
-          { label: "About", href: "#about" },
-          { label: "Eligibility", href: "#eligibility" },
-          { label: "Winners", href: "#winners" },
-          { label: "Contact", href: "#contact" },
-        ]}
-        secondaryAction={{
-          label: "Login",
-          onClick: () => {
-            console.log("clicked");
-            auth.signinRedirect();
-          },
-        }}
-      />
       {/*//? Hero Section ======================================================================================== */}
       <Hero />
 

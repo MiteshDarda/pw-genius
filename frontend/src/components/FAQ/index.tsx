@@ -31,7 +31,7 @@ const faqs: FAQItem[] = [
 const FAQ = () => {
   return (
     <>
-      <section className="max-w-7xl mx-auto mt-16 px-4">
+      <section className="max-w-7xl mx-auto mt-16 px-4" id="faq">
         <h2 className="text-[22px] md:text-[32px] font-bold mb-4">
           Frequently Asked Questions
         </h2>
