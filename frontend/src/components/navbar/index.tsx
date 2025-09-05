@@ -15,11 +15,7 @@ interface NavbarProps {
   secondaryAction?: NavItem;
 }
 
-const Navbar = ({
-  logoSrc = "/pw-logo-long.jpg",
-  navItems,
-  secondaryAction,
-}: NavbarProps) => {
+const Navbar = ({ navItems, secondaryAction }: NavbarProps) => {
   const [open, setOpen] = useState(false);
 
   const renderSecondaryAction = (
@@ -55,7 +51,7 @@ const Navbar = ({
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
           <div className="flex items-center gap-2">
             <Link to="/" className="hover:opacity-80 transition-opacity">
-              <img src={logoSrc} alt="Logo" className="h-12" />
+              <img src={"/pw-logo-long2.png"} alt="Logo" className="h-12" />
             </Link>
           </div>
 
