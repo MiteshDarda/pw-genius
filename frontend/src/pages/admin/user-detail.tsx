@@ -397,14 +397,14 @@ function AdminUserDetail() {
               <button
                 onClick={() => handleStatusUpdate("approved")}
                 disabled={updating}
-                className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {updating ? "Updating..." : "Approve"}
               </button>
               <button
                 onClick={() => handleStatusUpdate("rejected")}
                 disabled={updating}
-                className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {updating ? "Updating..." : "Reject"}
               </button>
@@ -519,10 +519,7 @@ function AdminUserDetail() {
                   </p>
                 )}
               </div>
-              <button
-                onClick={downloadFile}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
+              <button onClick={downloadFile} className="btn">
                 Download File
               </button>
             </div>

@@ -24,56 +24,51 @@ const classRewards = [
 
 const communityFeatures = [
   {
-    icon: <Crown className="text-purple-600" />,
+    icon: <Crown />,
     title: "Grand Awards Ceremony",
     description: "Top performers are honoured on stage.",
-    bgColor: "#F8EBFF",
   },
   {
-    icon: <GraduationCap className="text-green-600" />,
+    icon: <GraduationCap />,
     title: "Inspiring Keynote Addresses",
     description: "By leading educators.",
-    bgColor: "#F2FFE1",
   },
   {
-    icon: <ScreenShare className="text-orange-600" />,
+    icon: <ScreenShare />,
     title: "Interactive Workshops",
     description:
       "Hands-on workshops in science, technology, and creative problem-solving.",
-    bgColor: "#FFE8C0",
   },
   {
-    icon: <Atom className="text-blue-600" />,
+    icon: <Atom />,
     title: "Engaging Science-Tech Expos",
     description: "Explore the latest innovations.",
-    bgColor: "#D4ECFF",
   },
   {
-    icon: <Users className="text-pink-600" />,
+    icon: <Users />,
     title: "Family Fun Zones",
     description: "With games, photo booths, and networking lounges.",
-    bgColor: "#FFE9E7",
   },
 ];
 
 const clubBenefits = [
   {
-    icon: <GraduationCap className="text-green-600" />,
+    icon: <GraduationCap />,
     title: "Empowering Students",
     description: "City-wise mentoring camps & masterclasses",
   },
   {
-    icon: <MessageCircle className="text-orange-600" />,
+    icon: <MessageCircle />,
     title: "Community",
     description: "Online forums for peer support & doubt-solving",
   },
   {
-    icon: <Send className="text-blue-600" />,
+    icon: <Send />,
     title: "Breaking News",
     description: "Exclusive exam alerts & prep-tips",
   },
   {
-    icon: <Phone className="text-blue-400" />,
+    icon: <Phone />,
     title: "Helpline",
     description: "Dedicated helpline for students & parents",
   },
@@ -95,11 +90,11 @@ const RewardsCommunity = () => {
           </h2>
           <div
             className="border rounded-lg overflow-hidden"
-            style={{ borderColor: "#5C9FED" }}
+            style={{ borderColor: "var(--pw-brand-primary)" }}
           >
             <div
-              className="bg-gray-50 px-6 py-4 border-b border-[#5C9FED]"
-              style={{ borderColor: "#5C9FED" }}
+              className="bg-gray-50 px-6 py-4 border-b"
+              style={{ borderColor: "var(--pw-brand-primary)" }}
             >
               <div className="grid grid-cols-2 gap-4 font-semibold text-gray-800">
                 <div>Class Rank</div>
@@ -107,8 +102,8 @@ const RewardsCommunity = () => {
               </div>
             </div>
             <div
-              className="divide-y divide-[#5C9FED]"
-              style={{ borderColor: "#5C9FED" }}
+              className="divide-y"
+              style={{ borderColor: "var(--pw-brand-primary)" }}
             >
               {classRewards.map((reward, idx) => (
                 <div key={idx} className="px-6 py-4 hover:bg-gray-50">
@@ -124,7 +119,10 @@ const RewardsCommunity = () => {
           </div>
           <div
             className="mt-4 p-4 rounded-lg"
-            style={{ backgroundColor: "#F8EBFF" }}
+            style={{
+              background:
+                "linear-gradient(0deg, rgba(183,148,248,0.12), rgba(183,148,248,0.12)), #fff",
+            }}
           >
             <p className="text-gray-700 text-center font-medium">
               Plus: Special "Educator's Honour" certificates for Principals &
@@ -144,17 +142,8 @@ const RewardsCommunity = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {communityFeatures.map((feature, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-lg border-2 min-h-[228px]"
-                style={{
-                  backgroundColor: feature.bgColor,
-                  borderColor: "#5C9FED",
-                }}
-              >
-                <div className="w-8 h-8 flex items-center justify-center">
-                  {feature.icon}
-                </div>
+              <div key={idx} className="card-brand p-6 min-h-[228px]">
+                <div className="icon-badge mb-3">{feature.icon}</div>
                 <div className="flex items-center gap-3 mb-3">
                   <h3 className="text-lg font-semibold text-gray-800">
                     {feature.title}
@@ -189,14 +178,8 @@ const RewardsCommunity = () => {
                 </span>
                 <span className="text-sm text-gray-600">70%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-4">
-                <div
-                  className="h-4 rounded-full"
-                  style={{
-                    width: "70%",
-                    backgroundColor: "#1A78E5B2",
-                  }}
-                ></div>
+              <div className="progress-track">
+                <div className="progress-fill" style={{ width: "70%" }}></div>
               </div>
               <p className="text-sm text-gray-600 mt-1">
                 The achievements and exam scores you submitted during the
@@ -212,14 +195,8 @@ const RewardsCommunity = () => {
                 </span>
                 <span className="text-sm text-gray-600">30%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-4">
-                <div
-                  className="h-4 rounded-full"
-                  style={{
-                    width: "30%",
-                    backgroundColor: "#5E92CE80",
-                  }}
-                ></div>
+              <div className="progress-track">
+                <div className="progress-fill" style={{ width: "30%" }}></div>
               </div>
               <p className="text-sm text-gray-600 mt-1">
                 Your participation and performance in on-site challenges and
@@ -236,15 +213,9 @@ const RewardsCommunity = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {clubBenefits.map((benefit, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-lg border-2"
-                style={{ borderColor: "#5C9FED" }}
-              >
+              <div key={idx} className="card-brand p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    {benefit.icon}
-                  </div>
+                  <div className="icon-badge">{benefit.icon}</div>
                   <h3 className="text-lg font-semibold text-gray-800">
                     {benefit.title}
                   </h3>

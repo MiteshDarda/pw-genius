@@ -82,7 +82,7 @@ const MeetOurChampions = () => {
           {years.map((year) => (
             <button
               key={year}
-              className={`px-3 py-1 rounded-full text-xs font-medium border ${selectedYear === year ? "bg-blue-600 text-white" : "bg-white text-gray-800"}`}
+              className={`px-3 py-1 rounded-full text-xs font-medium border ${selectedYear === year ? "btn" : "bg-white text-gray-800"}`}
               onClick={() => setSelectedYear(year)}
             >
               {year}
@@ -95,9 +95,7 @@ const MeetOurChampions = () => {
           ))}
         </div>
         <div className="flex justify-center mt-4">
-          <button className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium hover:bg-gray-300">
-            View More
-          </button>
+          <button className="btn">View More</button>
         </div>
       </section>
     </>

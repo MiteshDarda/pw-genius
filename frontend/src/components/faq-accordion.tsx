@@ -37,9 +37,13 @@ const FAQAccordion: React.FC<FAQAccordionProps> = ({ faqs }) => {
             {faq.question}
             <span>{openIndex === idx ? "-" : "+"}</span>
           </button>
-          {openIndex === idx && (
-            <div className="px-4 pb-4 text-[#4F4F96] text-sm">{faq.answer}</div>
-          )}
+          <div
+            className={`accordion-panel ${openIndex === idx ? "is-open" : ""}`}
+          >
+            <div className="px-4 pt-5 pb-4 text-[#4F4F96] text-sm">
+              {faq.answer}
+            </div>
+          </div>
         </div>
       ))}
     </div>

@@ -17,7 +17,13 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
   // Check if closingTime is valid
   if (!closingTime || isNaN(parseInt(closingTime))) {
     return (
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16 px-4">
+      <div
+        className="py-16 px-4"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(183,148,248,0.15), rgba(143,110,249,0.15))",
+        }}
+      >
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Nomination Period
@@ -27,7 +33,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
           </p>
           <button
             onClick={() => navigate("/register")}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+            className="btn shadow-lg hover:shadow-xl"
           >
             Nominate Now
           </button>
@@ -67,7 +73,13 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
     timeLeft.seconds === 0
   ) {
     return (
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16 px-4">
+      <div
+        className="py-16 px-4"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(183,148,248,0.15), rgba(143,110,249,0.15))",
+        }}
+      >
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Nomination Period Closed
@@ -101,7 +113,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {/* Days */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-[#1A78E5] mb-2">
+                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.days.toString().padStart(2, "0")} &nbsp; :
                 </div>
                 <div
@@ -116,7 +128,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
 
               {/* Hours */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-[#1A78E5] mb-2">
+                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.hours.toString().padStart(2, "0")} &nbsp; :
                 </div>
                 <div
@@ -131,7 +143,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
 
               {/* Minutes */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-[#1A78E5] mb-2">
+                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.minutes.toString().padStart(2, "0")} &nbsp; :
                 </div>
                 <div
@@ -146,7 +158,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
 
               {/* Seconds */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-[#1A78E5] mb-2">
+                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.seconds.toString().padStart(2, "0")}
                 </div>
                 <div
@@ -170,7 +182,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
             alt="Launch Your Store"
             className="w-80 h-80 md:w-96 md:h-96 object-contain"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-blue-50/50 to-transparent rounded-full"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[rgba(183,148,248,0.5)] to-transparent rounded-full"></div>
         </div>
       </div>
     </div>

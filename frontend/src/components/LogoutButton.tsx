@@ -17,13 +17,13 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
   const getVariantClasses = () => {
     switch (variant) {
       case "primary":
-        return "bg-blue-600 hover:bg-blue-700 text-white";
+        return "btn";
       case "secondary":
-        return "bg-gray-600 hover:bg-gray-700 text-white";
+        return "btn";
       case "danger":
-        return "bg-red-600 hover:bg-red-700 text-white";
+        return "btn";
       default:
-        return "bg-red-600 hover:bg-red-700 text-white";
+        return "btn";
     }
   };
 

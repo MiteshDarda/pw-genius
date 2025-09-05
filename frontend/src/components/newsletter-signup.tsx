@@ -28,21 +28,21 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
         placeholder="Email address"
         className="border rounded px-3 py-2 text-sm"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
         required
       />
       <label className="flex items-center gap-2 text-xs">
         <input
           type="checkbox"
           checked={agreed}
-          onChange={e => setAgreed(e.target.checked)}
+          onChange={(e) => setAgreed(e.target.checked)}
           required
         />
         I agree to the terms and conditions
       </label>
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded font-semibold text-sm disabled:opacity-50"
+        className="btn disabled:opacity-50"
         disabled={!agreed || !email}
       >
         Subscribe
@@ -51,4 +51,4 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
   );
 };
 
-export default NewsletterSignup; 
+export default NewsletterSignup;

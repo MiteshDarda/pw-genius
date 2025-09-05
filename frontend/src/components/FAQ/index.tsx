@@ -1,4 +1,5 @@
 import FAQAccordion, { type FAQItem } from "../faq-accordion";
+import { useEffect, useRef } from "react";
 
 // FAQ data
 const faqs: FAQItem[] = [
@@ -29,9 +30,35 @@ const faqs: FAQItem[] = [
 ];
 
 const FAQ = () => {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
-      <section className="max-w-7xl mx-auto mt-16 px-4" id="faq">
+      <section
+        ref={sectionRef}
+        className="max-w-7xl mx-auto mt-16 px-4 fade-in-up"
+        id="faq"
+        style={{ ["--fade-delay" as any]: "100ms" }}
+      >
         <h2 className="text-[22px] md:text-[32px] font-bold mb-4">
           Frequently Asked Questions
         </h2>

@@ -121,7 +121,7 @@ const Snackbar: React.FC<SnackbarProps> = ({
               setIsVisible(false);
               setTimeout(onClose, 300);
             }}
-            className="ml-4 text-gray-500 hover:text-gray-700 transition-colors"
+            className="ml-4 btn"
             style={{ color: styles.textColor }}
           >
             <svg

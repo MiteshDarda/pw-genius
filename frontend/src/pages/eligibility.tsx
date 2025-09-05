@@ -9,25 +9,25 @@ interface AchievementData {
 
 const eligibilityGuidelines = [
   {
-    icon: <Shield className="text-green-600" />,
+    icon: <Shield />,
     title: "Who Can Participate",
     description:
       "Students currently studying in Classes 5th to 10th (as on 1st April 2025) are eligible to participate in the inaugural edition of PW Genius.",
   },
   {
-    icon: <Trophy className="text-yellow-600" />,
+    icon: <Trophy />,
     title: "Nomination Requirement",
     description:
       "To nominate for PW Genius, a student must have at least one qualifying achievement from the categories listed in the official achievement table provided.",
   },
   {
-    icon: <Medal className="text-orange-600" />,
+    icon: <Medal />,
     title: "Assured Rewards Eligibility",
     description:
       "To be eligible for Assured Rewards, it is mandatory that the student holds at least one qualifying achievement from the academic session (2024-25)/current academic session (2025-26).",
   },
   {
-    icon: <Star className="text-red-600" />,
+    icon: <Star />,
     title: "Final Round (PG 1 to PG 20) Selection",
     description:
       "Have the highest level of overall achievements, and have at least one qualifying achievement specifically from session 2024-25/2025-26.",
@@ -158,7 +158,7 @@ const Eligibility = () => {
       <div className="bg-gray-50 min-h-screen">
         <main className="max-w-7xl mx-auto pt-28 pb-12 px-4">
           <div className="text-center py-12">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="w-12 h-12 border-4 border-[var(--pw-brand-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-lg text-gray-600 mb-2">
               Loading eligibility criteria...
             </p>
@@ -189,13 +189,8 @@ const Eligibility = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {eligibilityGuidelines.map((guideline, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-4 p-6 bg-white rounded-lg border border-gray-200"
-              >
-                <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
-                  {guideline.icon}
-                </div>
+              <div key={idx} className="flex items-start gap-4 p-6 card-brand">
+                <div className="icon-badge flex-shrink-0">{guideline.icon}</div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
                     {guideline.title}
@@ -222,10 +217,10 @@ const Eligibility = () => {
                   <button
                     key={classItem.id}
                     onClick={() => setSelectedClass(classItem.id)}
-                    className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors ${
+                    className={`w-full text-left rounded-lg font-medium transition-colors ${
                       selectedClass === classItem.id
-                        ? "bg-blue-600 text-white shadow-md"
-                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300"
+                        ? "btn shadow-md"
+                        : "px-[15px] py-[5px] sm:px-[24px] sm:py-[12px] sm:text-lg bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                     }`}
                   >
                     {classItem.name}
@@ -239,7 +234,14 @@ const Eligibility = () => {
           <div className="flex-1">
             {/* Class Header */}
             <div className="mb-6">
-              <h3 className="text-3xl font-bold text-blue-600 text-center py-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h3
+                className="text-3xl font-bold text-brand text-center py-4 rounded-lg border"
+                style={{
+                  background:
+                    "linear-gradient(0deg, rgba(183,148,248,0.12), rgba(183,148,248,0.12)), #fff",
+                  borderColor: "var(--pw-brand-primary)",
+                }}
+              >
                 {getCurrentClassLabel()}
               </h3>
             </div>
@@ -261,7 +263,10 @@ const Eligibility = () => {
               ) : (
                 <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                   {/* Table Header */}
-                  <div className="bg-gray-50 px-6 py-4 border-b-2 border-gray-300">
+                  <div
+                    className="bg-gray-50 px-6 py-4 border-b-2"
+                    style={{ borderColor: "var(--pw-brand-primary)" }}
+                  >
                     <div className="grid grid-cols-2 gap-4 font-bold text-lg text-gray-800">
                       <div>Competition Title</div>
                       <div>Criteria</div>
@@ -274,7 +279,10 @@ const Eligibility = () => {
                       ([category, achievements], categoryIdx) => (
                         <div key={categoryIdx}>
                           {/* Category Header - Bold and Bigger Font */}
-                          <div className="px-6 py-4 bg-gray-100 border-b border-gray-300">
+                          <div
+                            className="px-6 py-4 bg-gray-100 border-b"
+                            style={{ borderColor: "var(--pw-brand-primary)" }}
+                          >
                             <h4 className="text-lg font-bold text-gray-800">
                               {category}
                             </h4>

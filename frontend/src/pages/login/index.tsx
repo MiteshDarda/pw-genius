@@ -22,15 +22,21 @@ function Login() {
         <pre> Access Token: {auth.user?.access_token} </pre>
         <pre> Refresh Token: {auth.user?.refresh_token} </pre>
 
-        <button onClick={() => auth.removeUser()}>Sign out</button>
+        <button className="btn" onClick={() => auth.removeUser()}>
+          Sign out
+        </button>
       </div>
     );
   }
 
   return (
     <div>
-      <button onClick={() => auth.signinRedirect()}>Sign in</button>
-      <button onClick={() => signOutRedirect()}>Sign out</button>
+      <button className="btn" onClick={() => auth.signinRedirect()}>
+        Sign in
+      </button>
+      <button className="btn" onClick={() => signOutRedirect()}>
+        Sign out
+      </button>
     </div>
   );
 }

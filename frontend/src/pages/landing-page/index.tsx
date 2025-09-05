@@ -24,11 +24,17 @@ const LandingPage = () => {
       {/*//? Hero Section ======================================================================================== */}
       <Hero />
 
+      <div className="h-px brand-gradient my-12 opacity-70" />
+
       {/*//? Why Participate? ======================================================================================== */}
       <WhyParticipate />
 
+      <div className="h-px brand-gradient my-12 opacity-70" />
+
       {/*//? Nomination Closes In ======================================================================================== */}
       <CountdownTimer closingTime={timeLeft} />
+
+      <div className="h-px brand-gradient my-12 opacity-70" />
 
       {/*//? Past Winners Section ======================================================================================== */}
       {/* <PastWinnersSection /> */}

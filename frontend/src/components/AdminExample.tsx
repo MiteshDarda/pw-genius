@@ -73,10 +73,18 @@ const AdminExample: React.FC = () => {
         }}
       >
         <h3>1. Direct Function Calls</h3>
-        <button onClick={handleDirectCheck} style={{ marginBottom: "10px" }}>
+        <button
+          className="btn"
+          onClick={handleDirectCheck}
+          style={{ marginBottom: "10px" }}
+        >
           Check Admin Status
         </button>
-        <button onClick={handleTokenAnalysis} style={{ marginLeft: "10px" }}>
+        <button
+          className="btn"
+          onClick={handleTokenAnalysis}
+          style={{ marginLeft: "10px" }}
+        >
           Analyze Token
         </button>
       </div>
@@ -136,7 +144,10 @@ const AdminExample: React.FC = () => {
           >
             <h4>🎉 Admin Content</h4>
             <p>This content is only visible to admin users.</p>
-            <button onClick={() => alert("Admin action performed!")}>
+            <button
+              className="btn"
+              onClick={() => alert("Admin action performed!")}
+            >
               Admin Action
             </button>
           </div>
@@ -185,7 +196,10 @@ const AdminExample: React.FC = () => {
               >
                 <h4>👑 Admin Panel</h4>
                 <p>Welcome to the admin panel!</p>
-                <button onClick={() => alert("Admin panel action")}>
+                <button
+                  className="btn"
+                  onClick={() => alert("Admin panel action")}
+                >
                   Manage Users
                 </button>
               </div>
@@ -202,7 +216,10 @@ const AdminExample: React.FC = () => {
               >
                 <h4>🛡️ Moderator Panel</h4>
                 <p>Welcome to the moderator panel!</p>
-                <button onClick={() => alert("Moderator action")}>
+                <button
+                  className="btn"
+                  onClick={() => alert("Moderator action")}
+                >
                   Review Content
                 </button>
               </div>

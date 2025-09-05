@@ -12,8 +12,6 @@ import {
 } from "../utils/auth";
 import { useSnackbar } from "../hooks/useSnackbar";
 
-
-
 // Available class options for the registration form
 const classes = ["6", "7", "8", "9", "10", "11", "12"];
 
@@ -601,10 +599,10 @@ const RegistrationForm = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`mt-4 px-4 py-3 rounded-lg font-semibold text-white relative overflow-hidden ${
+                className={`mt-4 relative overflow-hidden ${
                   isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
+                    ? "bg-gray-400 cursor-not-allowed text-white rounded-lg px-4 py-3"
+                    : "btn"
                 }`}
               >
                 {isSubmitting ? (
@@ -617,7 +615,7 @@ const RegistrationForm = () => {
                 )}
                 {isSubmitting && (
                   <div
-                    className="absolute bottom-0 left-0 h-1 bg-blue-400 animate-pulse"
+                    className="absolute bottom-0 left-0 h-1 animate-pulse"
                     style={{ width: "100%" }}
                   ></div>
                 )}

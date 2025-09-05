@@ -83,9 +83,7 @@ const NominationGuide = () => {
               </div>
             ))}
           </div>
-          <button className="bg-blue-600 text-white px-6 py-3 my-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-            Learn More About Eligibility
-          </button>
+          <button className="btn my-6">Learn More About Eligibility</button>
         </div>
 
         {/* How to Nominate Section */}
