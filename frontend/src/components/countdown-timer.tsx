@@ -113,7 +113,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {/* Days */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
+                <div className="text-2xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.days.toString().padStart(2, "0")} &nbsp; :
                 </div>
                 <div
@@ -128,7 +128,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
 
               {/* Hours */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
+                <div className="text-2xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.hours.toString().padStart(2, "0")} &nbsp; :
                 </div>
                 <div
@@ -143,7 +143,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
 
               {/* Minutes */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
+                <div className="text-2xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.minutes.toString().padStart(2, "0")} &nbsp; :
                 </div>
                 <div
@@ -158,7 +158,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ closingTime }) => {
 
               {/* Seconds */}
               <div className="text-center">
-                <div className="text-4xl md:text-6xl font-bold text-brand mb-2">
+                <div className="text-2xl md:text-6xl font-bold text-brand mb-2">
                   {timeLeft.seconds.toString().padStart(2, "0")}
                 </div>
                 <div

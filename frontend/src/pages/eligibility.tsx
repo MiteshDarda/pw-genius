@@ -205,14 +205,14 @@ const Eligibility = () => {
         </div>
 
         {/* Main Content Area with Sidebar and Content */}
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Sidebar - Class Selection */}
-          <div className="w-64 flex-shrink-0">
-            <div className="sticky top-32">
+          <div className="w-full lg:w-64 flex-shrink-0">
+            <div className="lg:sticky lg:top-32">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">
                 Select Your Class
               </h2>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:space-y-2 lg:space-y-0">
                 {classes.map((classItem) => (
                   <button
                     key={classItem.id}
@@ -262,9 +262,9 @@ const Eligibility = () => {
                 </div>
               ) : (
                 <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                  {/* Table Header */}
+                  {/* Table Header - Hidden on mobile */}
                   <div
-                    className="bg-gray-50 px-6 py-4 border-b-2"
+                    className="bg-gray-50 px-3 sm:px-6 py-4 border-b-2 hidden sm:block"
                     style={{ borderColor: "var(--pw-brand-primary)" }}
                   >
                     <div className="grid grid-cols-2 gap-4 font-bold text-lg text-gray-800">
@@ -280,10 +280,10 @@ const Eligibility = () => {
                         <div key={categoryIdx}>
                           {/* Category Header - Bold and Bigger Font */}
                           <div
-                            className="px-6 py-4 bg-gray-100 border-b"
+                            className="px-3 sm:px-6 py-4 bg-gray-100 border-b"
                             style={{ borderColor: "var(--pw-brand-primary)" }}
                           >
-                            <h4 className="text-lg font-bold text-gray-800">
+                            <h4 className="text-base sm:text-lg font-bold text-gray-800">
                               {category}
                             </h4>
                           </div>
@@ -292,14 +292,15 @@ const Eligibility = () => {
                           {achievements.map((achievement, idx) => (
                             <div
                               key={idx}
-                              className={`px-6 py-4 hover:bg-gray-50 ${
+                              className={`px-3 sm:px-6 py-4 hover:bg-gray-50 ${
                                 achievements.length > 1 &&
                                 idx < achievements.length - 1
                                   ? "border-b border-gray-200"
                                   : ""
                               }`}
                             >
-                              <div className="grid grid-cols-2 gap-4">
+                              {/* Desktop Layout */}
+                              <div className="hidden sm:grid grid-cols-2 gap-4">
                                 <div
                                   className={`font-medium text-gray-800 ${
                                     achievements.length === 1
@@ -314,6 +315,34 @@ const Eligibility = () => {
                                     achievements.length === 1
                                       ? "text-lg font-bold"
                                       : ""
+                                  }`}
+                                >
+                                  {achievement.Criteria}
+                                </div>
+                              </div>
+
+                              {/* Mobile Layout */}
+                              <div className="sm:hidden space-y-2">
+                                <div className="font-semibold text-gray-800 text-sm">
+                                  Competition:
+                                </div>
+                                <div
+                                  className={`font-medium text-gray-800 mb-3 ${
+                                    achievements.length === 1
+                                      ? "text-base font-bold"
+                                      : "text-sm"
+                                  }`}
+                                >
+                                  {achievement["Competition Title"]}
+                                </div>
+                                <div className="font-semibold text-gray-800 text-sm">
+                                  Criteria:
+                                </div>
+                                <div
+                                  className={`text-gray-700 ${
+                                    achievements.length === 1
+                                      ? "text-base font-bold"
+                                      : "text-sm"
                                   }`}
                                 >
                                   {achievement.Criteria}

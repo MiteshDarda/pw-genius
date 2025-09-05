@@ -1,36 +1,36 @@
 const Hero = () => {
   return (
-    <section className=" px-4 md:px-0 bg-white relative">
-      <div className="max-w-screen mx-auto text-center relative">
+    <section className="px-4 md:px-0 bg-white relative h-screen">
+      <div className="w-full h-full mx-auto text-center relative">
         {/* Image */}
         <img
           src="/background.gif"
           alt="PW Celebration Background"
-          className="mx-auto w-full max-h-screen object-cover"
+          className="w-full h-full object-cover"
         />
 
         {/* Black overlay */}
         <div
-          className="absolute top-0 left-0 w-full h-full max-h-screen rounded-xl"
+          className="absolute top-0 left-0 w-full h-full rounded-xl"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         />
 
         {/* Text and button */}
         <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-white z-10 px-4">
-          <div className="w-[50%]">
+          <div className="w-full max-w-2xl md:w-[50%]">
             <h1
-              className="text-3xl md:text-[43px] mb-4"
+              className="text-2xl sm:text-3xl md:text-[43px] mb-4 leading-tight"
               style={{
                 fontWeight: 800,
               }}
             >
-              From Olympiads to Opportunities—Let’s Celebrate Your Moment.
+              From Olympiads to Opportunities—Let's Celebrate Your Moment.
             </h1>
-            <p className="text-base md:text-[22px] mb-6">
+            <p className="text-sm sm:text-base md:text-[22px] mb-6">
               Celebrating Young Genius from Classes 5 to 10
             </p>
             <p
-              className="text-base md:text-[22px] mb-6"
+              className="text-sm sm:text-base md:text-[22px] mb-6"
               style={{
                 fontWeight: 700,
               }}
@@ -65,7 +65,7 @@ const Hero = () => {
                 #<span className="text-brand-gradient">Talent</span>KiPehchan
               </span>
             </p>
-            <a href="#nominate" className="btn">
+            <a href="#nominate" className="btn text-sm sm:text-base">
               Nominate Yourself
             </a>
           </div>
