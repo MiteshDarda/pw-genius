@@ -155,6 +155,14 @@ const RegistrationForm = () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/register/check/${userData?.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        },
       );
 
       setUserRegistrationStatus({
@@ -247,6 +255,9 @@ const RegistrationForm = () => {
         formData,
         {
           headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": "true",
             // Let axios set the correct Content-Type for FormData
             "Content-Type": "multipart/form-data",
           },
