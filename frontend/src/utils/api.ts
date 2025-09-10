@@ -1,7 +1,18 @@
 import axios from "axios";
 
+// Get the backend URL from environment or use proxy
+const getBackendUrl = () => {
+  // In production (Vercel), use relative URLs for proxy
+  if (window.location.hostname.includes("vercel.app")) {
+    return "";
+  }
+  // In development, use the environment variable or localhost
+  return import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+};
+
 // Create axios instance with default configuration for ngrok
 const apiClient = axios.create({
+  baseURL: getBackendUrl(),
   headers: {
     "ngrok-skip-browser-warning": "any",
     Accept: "application/json",
@@ -21,10 +32,6 @@ apiClient.interceptors.request.use(
 
     // Add additional ngrok bypass headers
     config.headers["ngrok-skip-browser-warning"] = "any";
-
-    // Add user agent to help ngrok identify the request
-    config.headers["User-Agent"] =
-      "Mozilla/5.0 (compatible; PW-Genius-App/1.0)";
 
     return config;
   },

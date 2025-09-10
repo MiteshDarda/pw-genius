@@ -51,10 +51,28 @@ function AdminPage() {
       if (examFilter) params.append("exam", examFilter);
       if (statusFilter) params.append("status", statusFilter);
 
-      const data: NominationsResponse = await apiClient.get(
+      const response = await apiClient.get(
         `/api/register/admin/nominations?${params}`,
       );
-      setNominations(data.nominations);
+
+      console.log("API Response:", response);
+
+      // Handle different response structures
+      if (response.data && Array.isArray(response.data)) {
+        // If response.data is directly an array
+        setNominations(response.data);
+      } else if (
+        response.data &&
+        response.data.nominations &&
+        Array.isArray(response.data.nominations)
+      ) {
+        // If response.data has a nominations property
+        setNominations(response.data.nominations);
+      } else {
+        console.error("Unexpected API response structure:", response.data);
+        setNominations([]);
+        setError("Unexpected response format from server");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -248,7 +266,7 @@ function AdminPage() {
         {!loading && !error && (
           <div className="bg-white rounded-lg shadow-sm">
             <div className="divide-y divide-gray-200">
-              {nominations.map((nomination) => (
+              {(nominations || []).map((nomination) => (
                 <div
                   key={nomination.id}
                   className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"

@@ -51,10 +51,19 @@ function AdminUserDetail() {
       setLoading(true);
       setError(null);
 
-      const data: UserNomination = await apiClient.get(
+      const response = await apiClient.get(
         `/api/register/admin/user/${userId}`,
       );
-      setNomination(data);
+
+      console.log("User API Response:", response);
+
+      // Handle different response structures
+      if (response.data) {
+        setNomination(response.data);
+      } else {
+        console.error("Unexpected API response structure:", response);
+        setError("Unexpected response format from server");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
