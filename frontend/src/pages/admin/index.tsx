@@ -23,11 +23,6 @@ interface Nomination {
   updatedAt: string;
 }
 
-interface NominationsResponse {
-  nominations: Nomination[];
-  total: number;
-}
-
 function AdminPage() {
   const navigate = useNavigate();
   const isAdmin = isUserAdmin();
