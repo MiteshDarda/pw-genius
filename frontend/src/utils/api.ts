@@ -5,6 +5,7 @@ const apiClient = axios.create({
   headers: {
     "ngrok-skip-browser-warning": "any",
     Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   },
 });
 
@@ -17,6 +18,13 @@ apiClient.interceptors.request.use(
     if (userData?.access_token) {
       config.headers.Authorization = `Bearer ${userData.access_token}`;
     }
+
+    // Add additional ngrok bypass headers
+    config.headers["ngrok-skip-browser-warning"] = "any";
+
+    // Add user agent to help ngrok identify the request
+    config.headers["User-Agent"] =
+      "Mozilla/5.0 (compatible; PW-Genius-App/1.0)";
 
     return config;
   },

@@ -9,11 +9,18 @@ async function bootstrap() {
 
   // Enable CORS for all origins
   app.enableCors({
-    origin: true, // Allow all origins
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://pw-genius.vercel.app', // Add your Vercel domain
+      /\.vercel\.app$/, // Allow all Vercel subdomains
+      '*', // Allow all origins as fallback
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders:
-      'Content-Type, Accept, Authorization, ngrok-skip-browser-warning',
+      'Content-Type, Accept, Authorization, ngrok-skip-browser-warning, X-Requested-With',
+    exposedHeaders: 'ngrok-skip-browser-warning',
   });
 
   // Set global prefix

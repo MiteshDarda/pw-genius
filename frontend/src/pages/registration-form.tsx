@@ -155,7 +155,7 @@ const RegistrationForm = () => {
   const checkUserRegistration = async () => {
     try {
       const response = await apiClient.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/register/check/${userData?.userId}`,
+        `/api/register/check/${userData?.userId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -248,18 +248,14 @@ const RegistrationForm = () => {
       }
 
       // Send registration data to backend using apiClient
-      const response = await apiClient.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/register`,
-        formData,
-        {
-          headers: {
-            // Let axios set the correct Content-Type for FormData
-            "Content-Type": "multipart/form-data",
-          },
-          // Add timeout to prevent hanging requests
-          timeout: 30000, // 30 seconds
+      const response = await apiClient.post(`/api/register`, formData, {
+        headers: {
+          // Let axios set the correct Content-Type for FormData
+          "Content-Type": "multipart/form-data",
         },
-      );
+        // Add timeout to prevent hanging requests
+        timeout: 30000, // 30 seconds
+      });
 
       // Handle successful submission
       if (response.status === 200 || response.status === 201) {
