@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { isUserAdmin } from "../../utils/auth";
 import LogoutButton from "../../components/LogoutButton";
+import apiClient from "../../utils/api";
 
 interface Nomination {
   id: string;
@@ -50,17 +51,9 @@ function AdminPage() {
       if (examFilter) params.append("exam", examFilter);
       if (statusFilter) params.append("status", statusFilter);
 
-      const backendUrl =
-        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
-      const response = await fetch(
-        `${backendUrl}/api/register/admin/nominations?${params}`,
+      const data: NominationsResponse = await apiClient.get(
+        `/api/register/admin/nominations?${params}`,
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch nominations");
-      }
-
-      const data: NominationsResponse = await response.json();
       setNominations(data.nominations);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

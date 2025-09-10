@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { isUserAdmin } from "../../utils/auth";
 import LogoutButton from "../../components/LogoutButton";
+import apiClient from "../../utils/api";
 
 interface UserNomination {
   id: string;
@@ -50,21 +51,9 @@ function AdminUserDetail() {
       setLoading(true);
       setError(null);
 
-      const backendUrl =
-        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
-      const response = await fetch(
-        `${backendUrl}/api/register/admin/user/${userId}`,
+      const data: UserNomination = await apiClient.get(
+        `/api/register/admin/user/${userId}`,
       );
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          navigate("/admin");
-          return;
-        }
-        throw new Error("Failed to fetch user nomination");
-      }
-
-      const data: UserNomination = await response.json();
       setNomination(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -83,24 +72,18 @@ function AdminUserDetail() {
       setUpdating(true);
       setError(null);
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await fetch(
-        `${backendUrl}/api/register/admin/nominations/${nomination.id}/status`,
+      await apiClient.put(
+        `/api/register/admin/nominations/${nomination.id}/status`,
         {
-          method: "PUT",
+          status: newStatus,
+          remarks: remarks || "",
+        },
+        {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            status: newStatus,
-            remarks: remarks || "",
-          }),
         },
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to update nomination status");
-      }
 
       // Refresh the nomination data
       await fetchUserNomination();
@@ -115,17 +98,14 @@ function AdminUserDetail() {
     if (!nomination?.fileUploaded) return;
 
     try {
-      const backendUrl =
-        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
-      const response = await fetch(
-        `${backendUrl}/api/register/admin/nominations/${nomination.id}/download`,
+      const response = await apiClient.get(
+        `/api/register/admin/nominations/${nomination.id}/download`,
+        {
+          responseType: "blob",
+        },
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to download file");
-      }
-
-      const blob = await response.blob();
+      const blob = response.data;
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
