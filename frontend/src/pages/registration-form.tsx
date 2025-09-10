@@ -11,6 +11,7 @@ import {
   decodeJWTToken,
 } from "../utils/auth";
 import { useSnackbar } from "../hooks/useSnackbar";
+import apiClient from "../utils/api";
 
 // Available class options for the registration form
 const classes = ["6", "7", "8", "9", "10", "11", "12"];
@@ -153,14 +154,11 @@ const RegistrationForm = () => {
    */
   const checkUserRegistration = async () => {
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/register/check/${userData?.userId}`,
         {
           headers: {
-            Authorization: `Bearer ${userData?.access_token}`,
             "Content-Type": "application/json",
-            Accept: "application/json",
-            "ngrok-skip-browser-warning": "true",
           },
         },
       );
@@ -249,15 +247,12 @@ const RegistrationForm = () => {
         formData.append("file", form.file);
       }
 
-      // Send registration data to backend using axios
-      const response = await axios.post(
+      // Send registration data to backend using apiClient
+      const response = await apiClient.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/register`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${userData?.access_token}`,
-            Accept: "application/json",
-            "ngrok-skip-browser-warning": "true",
             // Let axios set the correct Content-Type for FormData
             "Content-Type": "multipart/form-data",
           },
@@ -275,7 +270,7 @@ const RegistrationForm = () => {
         // TODO: Consider redirecting to a success page or clearing the form
         // navigate("/success");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
 
       // Handle different types of errors

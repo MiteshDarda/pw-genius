@@ -12,7 +12,8 @@ async function bootstrap() {
     origin: true, // Allow all origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+    allowedHeaders:
+      'Content-Type, Accept, Authorization, ngrok-skip-browser-warning',
   });
 
   // Set global prefix
