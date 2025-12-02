@@ -7,8 +7,6 @@ import {
   getUserData,
   isUserAdmin,
   isUserInGroup,
-  getAllUserGroups,
-  decodeJWTToken,
 } from "../utils/auth";
 import { useSnackbar } from "../hooks/useSnackbar";
 import apiClient from "../utils/api";
@@ -79,19 +77,8 @@ const RegistrationForm = () => {
    */
   const checkAdminStatus = async () => {
     try {
-      // Get user data from localStorage
-      const userData = getUserData();
-
       // Check if user is admin (async)
       const isUserAdminStatus = await isUserAdmin();
-
-      // Get all user groups (async)
-      const allUserGroups = await getAllUserGroups();
-
-      // Check specific group memberships (async)
-      const isModerator = await isUserInGroup("moderator");
-      const isEditor = await isUserInGroup("editor");
-      const isUser = await isUserInGroup("user");
 
       // Check admin status and update state
       if (isUserAdminStatus) {
@@ -274,8 +261,6 @@ const RegistrationForm = () => {
 
     // Additional group checking
     const checkAllGroups = async () => {
-      const allGroups = await getAllUserGroups();
-
       // Check for common group names
       const commonGroups = [
         "admin",

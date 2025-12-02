@@ -34,7 +34,7 @@ const AdminExample: React.FC = () => {
       const userData = localStorage.getItem("cognitoUser");
       if (userData) {
         const parsed = JSON.parse(userData);
-        const decoded = decodeJWTToken(parsed.access_token);
+        decodeJWTToken(parsed.access_token);
         // Token decoded successfully
       }
     } catch (error) {
