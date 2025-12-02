@@ -57,9 +57,9 @@ const Navbar = ({ navItems, secondaryAction }: NavbarProps) => {
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <a
-                key={item.href || item.label}
+                key={`${item.label}-${index}`}
                 href={item.href ?? "#"}
                 className="text-white hover:opacity-90 font-medium"
               >
@@ -84,9 +84,9 @@ const Navbar = ({ navItems, secondaryAction }: NavbarProps) => {
         {/* Mobile Drawer */}
         {open && (
           <div className="md:hidden brand-gradient-vertical px-4 pb-4">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <a
-                key={item.href || item.label}
+                key={`${item.label}-${index}`}
                 href={item.href}
                 className="block py-2 text-white font-medium"
               >

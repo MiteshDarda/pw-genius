@@ -146,7 +146,6 @@ function AdminPage() {
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-900">Nominations</h1>
             </div>
-            <LogoutButton />
           </div>
         </div>
       </header>

@@ -1,7 +1,7 @@
 // Login.js
 
 import { useAuth } from "react-oidc-context";
-import { signOutRedirect } from "../../utils/logout";
+import { handleLogout } from "../../utils/logout";
 
 function Login() {
   const auth = useAuth();
@@ -22,7 +22,7 @@ function Login() {
         <pre> Access Token: {auth.user?.access_token} </pre>
         <pre> Refresh Token: {auth.user?.refresh_token} </pre>
 
-        <button className="btn" onClick={() => auth.removeUser()}>
+        <button className="btn" onClick={() => handleLogout(auth)}>
           Sign out
         </button>
       </div>
@@ -34,7 +34,7 @@ function Login() {
       <button className="btn" onClick={() => auth.signinRedirect()}>
         Sign in
       </button>
-      <button className="btn" onClick={() => signOutRedirect()}>
+      <button className="btn" onClick={() => handleLogout(auth)}>
         Sign out
       </button>
     </div>

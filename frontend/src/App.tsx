@@ -15,6 +15,7 @@ import GlobalSnackbar from "./components/GlobalSnackbar";
 import Navbar from "./components/navbar";
 import { useAuth } from "react-oidc-context";
 import { useEffect, useState } from "react";
+import { handleLogout } from "./utils/logout";
 
 // Define navbar configuration interface
 interface NavbarConfig {
@@ -64,7 +65,7 @@ const getNavbarConfig = (pathname: string, auth: any): NavbarConfig | null => {
       secondaryAction: {
         label: "Logout",
         onClick: () => {
-          auth.signoutRedirect();
+          handleLogout(auth);
         },
       },
     };
@@ -94,7 +95,7 @@ const getNavbarConfig = (pathname: string, auth: any): NavbarConfig | null => {
           label: "Logout",
           onClick: () => {
             // Handle logout for registration form
-            auth.signoutRedirect();
+            handleLogout(auth);
           },
         },
       };

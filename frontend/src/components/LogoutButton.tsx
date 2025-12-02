@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "react-oidc-context";
 import { handleLogout } from "../utils/logout";
 
 interface LogoutButtonProps {
@@ -14,6 +15,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
   variant = "danger",
   size = "md",
 }) => {
+  const auth = useAuth();
   const getVariantClasses = () => {
     switch (variant) {
       case "primary":
@@ -42,7 +44,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({
 
   return (
     <button
-      onClick={handleLogout}
+      onClick={() => handleLogout(auth)}
       className={`${getVariantClasses()} ${getSizeClasses()} rounded-lg font-semibold transition-colors ${className}`}
     >
       {children}
