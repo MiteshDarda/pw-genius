@@ -30,14 +30,7 @@ const AdminCheck: React.FC<AdminCheckProps> = ({
         // Get all user groups
         const groups = getAllUserGroups();
         setUserGroups(groups);
-
-        console.log("Admin check completed:", {
-          isAdmin: adminStatus,
-          groups: groups,
-          totalGroups: groups.length,
-        });
       } catch (err) {
-        console.error("Error checking admin status:", err);
         setError("Failed to check admin status");
         setIsAdmin(false);
       } finally {
@@ -96,7 +89,6 @@ export const useAdminStatus = () => {
         setIsAdmin(adminStatus);
         setUserGroups(groups);
       } catch (error) {
-        console.error("Error in useAdminStatus:", error);
         setIsAdmin(false);
       } finally {
         setLoading(false);
@@ -120,10 +112,6 @@ export const useGroupMembership = (groupName: string) => {
         const membership = isUserInGroup(groupName);
         setIsMember(membership);
       } catch (error) {
-        console.error(
-          `Error checking membership for group ${groupName}:`,
-          error,
-        );
         setIsMember(false);
       } finally {
         setLoading(false);

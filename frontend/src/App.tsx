@@ -114,7 +114,6 @@ function App() {
       const config = getNavbarConfig(location.pathname, auth);
       setNavbarConfig(config);
     } catch (error) {
-      console.error("Error getting navbar config:", error);
       setNavbarConfig(null);
     }
   }, [location.pathname, auth]);

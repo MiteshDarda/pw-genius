@@ -97,9 +97,7 @@ const Eligibility = () => {
           }
 
           allData[classItem.id] = data;
-          console.log(`Preloaded data for ${classItem.id}:`, data);
         } catch (error) {
-          console.error(`Error loading data for ${classItem.id}:`, error);
           allData[classItem.id] = [];
         }
       });
@@ -114,7 +112,7 @@ const Eligibility = () => {
         setAchievementData(allData["class5"]);
       }
     } catch (error) {
-      console.error("Error preloading class data:", error);
+      // Silent error handling
     } finally {
       setInitialLoading(false);
     }

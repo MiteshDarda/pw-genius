@@ -36,10 +36,6 @@ function SuccessPage() {
 
         // Check if user is admin and redirect accordingly
         const adminStatus = isUserAdmin();
-        console.log(
-          "User authentication successful. Admin status:",
-          adminStatus,
-        );
 
         // Redirect based on admin status
         setTimeout(() => {
@@ -50,7 +46,6 @@ function SuccessPage() {
           }
         }, 2000);
       } catch (error) {
-        console.error("Error processing OIDC user data:", error);
         // Fallback redirect
         setTimeout(() => {
           navigate("/register");
@@ -78,10 +73,6 @@ function SuccessPage() {
 
         // Check if user is admin and redirect accordingly
         const adminStatus = isUserAdmin();
-        console.log(
-          "User authentication successful. Admin status:",
-          adminStatus,
-        );
 
         // Redirect based on admin status
         setTimeout(() => {
@@ -105,7 +96,6 @@ function SuccessPage() {
           };
 
           storeUserData(userInfo);
-          console.log("Fallback user data stored");
 
           // Redirect to registration for fallback users
           setTimeout(() => {

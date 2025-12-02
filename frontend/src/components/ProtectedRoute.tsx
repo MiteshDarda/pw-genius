@@ -25,7 +25,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
         setIsValid(true);
       } catch (error) {
-        console.error("Auth validation error:", error);
         navigate("/");
       } finally {
         setIsValidating(false);
@@ -36,7 +35,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }, [navigate]);
 
   useEffect(() => {
-    console.log("is", isValid);
+    // Validation check complete
   }, [isValid]);
 
   if (isValidating) {

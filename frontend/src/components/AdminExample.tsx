@@ -15,17 +15,10 @@ const AdminExample: React.FC = () => {
       const groups = getAllUserGroups();
       const isModerator = isUserInGroup("moderator");
 
-      console.log("Direct check results:", {
-        isAdmin,
-        groups,
-        isModerator,
-      });
-
       alert(
         `Admin: ${isAdmin}\nGroups: ${groups.join(", ")}\nModerator: ${isModerator}`,
       );
     } catch (error) {
-      console.error("Error in direct check:", error);
       alert("Error checking permissions");
     }
   };
@@ -42,20 +35,10 @@ const AdminExample: React.FC = () => {
       if (userData) {
         const parsed = JSON.parse(userData);
         const decoded = decodeJWTToken(parsed.access_token);
-
-        if (decoded) {
-          console.log("Token analysis:", {
-            email: decoded.email,
-            groups: decoded["cognito:groups"],
-            expiration: decoded.exp
-              ? new Date(decoded.exp * 1000).toLocaleString()
-              : "No expiration",
-            issuer: decoded.iss,
-          });
-        }
+        // Token decoded successfully
       }
     } catch (error) {
-      console.error("Error analyzing token:", error);
+      // Silent error handling
     }
   };
 

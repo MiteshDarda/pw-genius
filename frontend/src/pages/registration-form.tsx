@@ -146,7 +146,7 @@ const RegistrationForm = () => {
         );
       }
     } catch (error) {
-      console.error("Error checking registration status:", error);
+      // Silent error handling
       setUserRegistrationStatus((prev) => ({ ...prev, loading: false }));
     }
   };
@@ -229,7 +229,7 @@ const RegistrationForm = () => {
         // navigate("/success");
       }
     } catch (error: any) {
-      console.error("Error submitting form:", error);
+      // Silent error handling
 
       // Handle different types of errors
       if (axios.isAxiosError(error)) {
