@@ -79,32 +79,22 @@ const RegistrationForm = () => {
    */
   const checkAdminStatus = async () => {
     try {
-      console.log("🔍 Checking user groups and admin status...");
-
       // Get user data from localStorage
       const userData = getUserData();
-      console.log("📋 User data from localStorage:", userData);
 
       // Check if user is admin (async)
       const isUserAdminStatus = await isUserAdmin();
-      console.log("👑 Is user admin?", isUserAdminStatus);
 
       // Get all user groups (async)
       const allUserGroups = await getAllUserGroups();
-      console.log("📊 All user groups:", allUserGroups);
 
       // Check specific group memberships (async)
       const isModerator = await isUserInGroup("moderator");
       const isEditor = await isUserInGroup("editor");
       const isUser = await isUserInGroup("user");
 
-      console.log("🛡️ Is user moderator?", isModerator);
-      console.log("✏️ Is user editor?", isEditor);
-      console.log("👤 Is user in 'user' group?", isUser);
-
       // Check admin status and update state
       if (isUserAdminStatus) {
-        console.log("✅ Admin has logged in");
         setIsAdmin(true);
         showSnackbar(
           "Welcome Admin! Redirecting to admin dashboard...",
@@ -114,38 +104,10 @@ const RegistrationForm = () => {
         // Redirect admin users to admin page after a short delay
         navigate("/admin");
       } else {
-        console.log("👤 Regular user logged in");
         setIsAdmin(false);
       }
-
-      // Additional token analysis if available
-      if (userData?.access_token) {
-        const decoded = decodeJWTToken(userData.access_token);
-        if (decoded) {
-          console.log("🔐 Token analysis:");
-          console.log("  - User email:", decoded.email);
-          console.log("  - User sub:", decoded.sub);
-          console.log("  - Token issuer:", decoded.iss);
-          console.log("  - Token audience:", decoded.aud);
-          console.log(
-            "  - Token expiration:",
-            decoded.exp
-              ? new Date(decoded.exp * 1000).toLocaleString()
-              : "No expiration",
-          );
-          console.log("  - All token groups:", decoded["cognito:groups"]);
-        }
-      }
-
-      // Summary of group checking
-      console.log("📈 Group checking summary:");
-      console.log("  - Total groups found:", allUserGroups.length);
-      console.log("  - Groups:", allUserGroups);
-      console.log("  - Is admin:", isUserAdminStatus);
-      console.log("  - Is moderator:", isModerator);
-      console.log("  - Is editor:", isEditor);
     } catch (error) {
-      console.error("❌ Error checking admin status:", error);
+      // Silent error handling
     }
   };
 
@@ -310,11 +272,9 @@ const RegistrationForm = () => {
       checkUserRegistration();
     }
 
-    // Additional group checking for debugging
+    // Additional group checking
     const checkAllGroups = async () => {
-      console.log("🚀 Component mounted - checking all available groups...");
       const allGroups = await getAllUserGroups();
-      console.log("📋 Available groups for user:", allGroups);
 
       // Check for common group names
       const commonGroups = [
@@ -328,10 +288,7 @@ const RegistrationForm = () => {
       ];
 
       for (const group of commonGroups) {
-        const isInGroup = await isUserInGroup(group);
-        if (isInGroup) {
-          console.log(`✅ User is in '${group}' group`);
-        }
+        await isUserInGroup(group);
       }
     };
 

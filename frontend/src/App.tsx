@@ -45,7 +45,6 @@ const landingPageNavbarConfig = (auth: any) => {
     secondaryAction: {
       label: "Login",
       onClick: () => {
-        console.log("clicked");
         auth.signinRedirect();
       },
     },

@@ -55,13 +55,10 @@ function AdminUserDetail() {
         `/api/register/admin/user/${userId}`,
       );
 
-      console.log("User API Response:", response);
-
       // Handle different response structures
       if (response.data) {
         setNomination(response.data);
       } else {
-        console.error("Unexpected API response structure:", response);
         setError("Unexpected response format from server");
       }
     } catch (err) {

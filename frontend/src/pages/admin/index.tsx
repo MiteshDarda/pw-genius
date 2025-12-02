@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { isUserAdmin } from "../../utils/auth";
-import LogoutButton from "../../components/LogoutButton";
 import apiClient from "../../utils/api";
 
 interface Nomination {
@@ -50,8 +49,6 @@ function AdminPage() {
         `/api/register/admin/nominations?${params}`,
       );
 
-      console.log("API Response:", response);
-
       // Handle different response structures
       if (response.data && Array.isArray(response.data)) {
         // If response.data is directly an array
@@ -64,7 +61,6 @@ function AdminPage() {
         // If response.data has a nominations property
         setNominations(response.data.nominations);
       } else {
-        console.error("Unexpected API response structure:", response.data);
         setNominations([]);
         setError("Unexpected response format from server");
       }
